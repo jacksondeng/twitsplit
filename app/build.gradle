@@ -26,6 +26,10 @@ android {
         targetCompatibility 1.8
         sourceCompatibility 1.8
     }
+
+    packagingOptions {
+        exclude 'META-INF/proguard/androidx-annotations.pro'
+    }
 }
 
 dependencies {
