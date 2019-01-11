@@ -3,6 +3,7 @@ package com.assignment.zalora.twitsplit
 import android.app.Activity
 import android.app.Application
 import com.assignment.zalora.twitsplit.di.component.DaggerAssignmentAppComponent
+import com.assignment.zalora.twitsplit.util.AWSProvider
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import net.danlew.android.joda.JodaTimeAndroid
@@ -30,6 +31,8 @@ class AssignmentApp : Application(), HasActivityInjector {
         JodaTimeAndroid.init(this);
 
         initDagger();
+        AWSProvider.initialize(this)
+
     }
 
     fun initDagger() {

@@ -2,7 +2,7 @@ package com.assignment.zalora.twitsplit.util
 
 import timber.log.Timber
 
-sealed class MessageUtils(){
+class MessageUtils(){
 
     fun split(msg : String) : List<String>{
         var splitString : List<String>
