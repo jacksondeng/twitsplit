@@ -22,13 +22,14 @@ class MessageUtils(){
         var returnList : MutableList<String> = mutableListOf()
         for(index in list.indices){
             if(msg.length+list.get(index).length<50){
-                msg += list.get(index)
-                msg += " "
+                msg += " " + list.get(index)
             }else{
                 returnList.add(msg)
                 msg = list.get(index)
             }
         }
+
+        // Add last msg into returnList
         returnList.add(msg)
         return returnList
     }

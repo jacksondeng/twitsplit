@@ -44,7 +44,8 @@ class DynamoDbUtils{
     }
 
     fun getCurrentTimeStamp() : String{
-        val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
-        return sdf.format(Date())
+        //val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
+        //return sdf.format(Date())
+        return System.currentTimeMillis().toString()
     }
 }
