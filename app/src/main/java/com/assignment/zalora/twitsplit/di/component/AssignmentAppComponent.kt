@@ -3,6 +3,8 @@ package com.assignment.zalora.twitsplit.di.component
 import android.app.Application
 import javax.inject.Singleton
 import com.assignment.zalora.twitsplit.AssignmentApp
+import com.assignment.zalora.twitsplit.di.module.ActivityBindingModule
+import com.assignment.zalora.twitsplit.di.module.DataModule
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
@@ -12,7 +14,8 @@ import dagger.android.support.AndroidSupportInjectionModule
 
 
 @Singleton
-@Component(modules = arrayOf(AndroidSupportInjectionModule::class, AndroidInjectionModule::class))
+@Component(modules = arrayOf(AndroidSupportInjectionModule::class, AndroidInjectionModule::class,
+    DataModule::class, ActivityBindingModule::class))
 interface AssignmentAppComponent {
     @Component.Builder
     interface Builder {

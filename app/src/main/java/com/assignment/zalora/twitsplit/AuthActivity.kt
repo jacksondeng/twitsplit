@@ -1,27 +1,47 @@
 package com.assignment.zalora.twitsplit
 
+import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity;
 import com.amazonaws.mobile.auth.ui.SignInUI
+import com.assignment.zalora.twitsplit.util.AWSInstanceState
 import com.assignment.zalora.twitsplit.util.AWSProvider
+import dagger.android.AndroidInjection
+import dagger.android.support.DaggerAppCompatActivity
 
 import kotlinx.android.synthetic.main.activity_auth.*
+import timber.log.Timber
+import javax.inject.Inject
 
-class AuthActivity : AppCompatActivity() {
+class AuthActivity : DaggerAppCompatActivity() {
+
+    @Inject
+    lateinit var awsProvider: AWSProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AndroidInjection.inject(this)
         setContentView(R.layout.activity_auth)
         setSupportActionBar(toolbar)
+        observeInstanceState()
+        awsProvider.instanceState?.postValue(AWSInstanceState.Initialized)
+    }
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
+    fun observeInstanceState(){
+        awsProvider.instanceState?.observe(this, Observer {
+                instanceState ->
+                Timber.d("instanceState $instanceState")
+                when(instanceState){
+                    AWSInstanceState.Initialized ->{
+                        promptLogin()
+                    }
+                }
+        })
+    }
 
-        // Pull in the SignInUI
-        val ui = AWSProvider.instance!!.getClient(this, SignInUI::class.java) as SignInUI
+    fun promptLogin(){
+        val ui = awsProvider.instance!!.getClient(this, SignInUI::class.java) as SignInUI
         ui.login(this, MainActivity::class.java).execute()
     }
 

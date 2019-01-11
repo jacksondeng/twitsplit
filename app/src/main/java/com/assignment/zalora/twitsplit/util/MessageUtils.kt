@@ -8,12 +8,12 @@ class MessageUtils(){
         var splitString : List<String>
         val list : List<String>
         if(checkIsLengthOverMax(msg)){
-            list = msg.split(" ")
             splitString = concatMsg(msg.split(" "))
         }
         else{
             splitString = mutableListOf(msg)
         }
+
         return splitString
     }
 
@@ -21,20 +21,16 @@ class MessageUtils(){
         var msg = ""
         var returnList : MutableList<String> = mutableListOf()
         for(index in list.indices){
-            concatStr(msg,list.get(index),returnList)
+            if(msg.length+list.get(index).length<50){
+                msg += list.get(index)
+                msg += " "
+            }else{
+                returnList.add(msg)
+                msg = list.get(index)
+            }
         }
+        returnList.add(msg)
         return returnList
-    }
-
-    fun concatStr(msg : String , msg1 : String,list : MutableList<String>){
-        var result = ""
-        if(msg.length+msg1.length<50){
-            result = msg+msg1
-            result += " "
-        }else{
-            list.add(msg)
-            result = msg1
-        }
     }
 
     fun checkIsLengthOverMax(msg : String) : Boolean{
