@@ -1,5 +1,6 @@
 package com.assignment.zalora.twitsplit.view
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
@@ -7,8 +8,10 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.view.Menu
 import android.view.MenuItem
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedQueryList
 import com.assignment.zalora.twitsplit.R
 import com.assignment.zalora.twitsplit.db.DynamoDbUtils
+import com.assignment.zalora.twitsplit.model.TweetsDO
 import com.assignment.zalora.twitsplit.util.AWSProvider
 import com.assignment.zalora.twitsplit.util.MessageUtils
 import com.assignment.zalora.twitsplit.viewmodel.TweetVM
@@ -49,6 +52,9 @@ class MainActivity : DaggerAppCompatActivity() {
                 tweetVM.postTweet(msgList.get(index),index)
             }*/
             tweetVM.readTweets()
+            tweetVM.tweetList.observe(this,Observer<PaginatedQueryList<TweetsDO>> {
+                tweetVM.iterateTweets()
+            })
         }
 
         if (!tweetVM.isUserSignedIn) {

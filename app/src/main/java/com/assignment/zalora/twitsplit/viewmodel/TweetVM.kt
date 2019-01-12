@@ -16,7 +16,7 @@ import javax.inject.Inject
 class TweetVM @Inject constructor(private val dynamoDbUtils: DynamoDbUtils, private val awsProvider: AWSProvider)
     : ViewModel(), LifecycleObserver {
 
-    private var tweetList : MutableLiveData<PaginatedQueryList<TweetsDO>> = MutableLiveData()
+    var tweetList : MutableLiveData<PaginatedQueryList<TweetsDO>> = MutableLiveData()
     var isUserSignedIn : Boolean
     init {
         this.isUserSignedIn = awsProvider.identityManager.isUserSignedIn()
@@ -28,9 +28,6 @@ class TweetVM @Inject constructor(private val dynamoDbUtils: DynamoDbUtils, priv
 
     fun readTweets(){
         tweetList.postValue(dynamoDbUtils.readTweet())
-        if(tweetList.value!=null) {
-            iterateTweets()
-        }
     }
 
     fun iterateTweets(){

@@ -12,13 +12,8 @@ import javax.inject.Singleton
 import kotlin.concurrent.thread
 
 @Singleton
-class DynamoDbUtils{
+class DynamoDbUtils(private var awsProvider: AWSProvider){
     private var dynamoDBMapper: DynamoDBMapper ? = null
-    private var awsProvider : AWSProvider ?= null
-
-    constructor(awsProvider: AWSProvider){
-        this.awsProvider = awsProvider
-    }
 
     fun createTweet(msg : String,index: Int) : TweetsDO {
         val tweet = TweetsDO()
@@ -45,7 +40,7 @@ class DynamoDbUtils{
         thread(start = true) {
             val queryExpression = DynamoDBQueryExpression<TweetsDO>()
             val tweet = TweetsDO()
-            tweet.userId = awsProvider!!.identityManager?.cachedUserID
+            tweet.userId = awsProvider!!.identityManager.cachedUserID
             queryExpression
                 .withHashKeyValues(tweet)
                 .withLimit(10)
@@ -55,7 +50,7 @@ class DynamoDbUtils{
     }
 
     fun initDbClient(){
-        val client = AmazonDynamoDBClient(awsProvider?.identityManager?.credentialsProvider)
+        val client = AmazonDynamoDBClient(awsProvider!!.identityManager.credentialsProvider)
         dynamoDBMapper = DynamoDBMapper.builder()
             .dynamoDBClient(client)
             .awsConfiguration(AWSMobileClient.getInstance().configuration)
