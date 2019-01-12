@@ -50,6 +50,6 @@ class InputMsgDialogFragment : DialogFragment() {
 
     fun initListeners(){
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        btnTweet?.setOnClickListener { activity?.onBackPressed()}
+        btnTweet?.setOnClickListener { this.dismiss()}
     }
 }
