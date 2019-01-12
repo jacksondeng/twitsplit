@@ -21,8 +21,8 @@ class TweetVM @Inject constructor(private val dynamoDbUtils: DynamoDbUtils, priv
         this.isUserSignedIn = awsProvider.identityManager.isUserSignedIn()
     }
 
-    fun postTweet(msg : String ,index : Int){
-        dynamoDbUtils.postTweet(msg,index)
+    fun postTweet(msgList : List<String>){
+        dynamoDbUtils.postTweet(msgList)
     }
 
     fun readTweets(){

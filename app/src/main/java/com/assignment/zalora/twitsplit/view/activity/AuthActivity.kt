@@ -1,4 +1,4 @@
-package com.assignment.zalora.twitsplit.view
+package com.assignment.zalora.twitsplit.view.activity
 
 import android.arch.lifecycle.Observer
 import android.os.Bundle

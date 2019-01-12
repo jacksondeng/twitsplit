@@ -7,9 +7,7 @@ interface StatusUtils {
 
     fun showLoading()
 
-    fun showError(throwable: Throwable, tryAgainAction: (() -> Unit)?)
-
-    fun showError(throwable: Throwable)
+    fun showError(err : String)
 
     fun hideLoading()
 

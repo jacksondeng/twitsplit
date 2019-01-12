@@ -12,6 +12,10 @@ class MessageUtils(){
         var trimmedMsg = trimSpacesAndNewlines(msg)
         var numOfSubStr = calculateMaxNumSubStr(trimmedMsg)
 
+        if(checkIsMsgEmpty(trimmedMsg)){
+            return splitString
+        }
+
         if(checkIsLengthOverMax(trimmedMsg)){
             if(!validateMsg(trimmedMsg.split(" "))){
                 return splitString
@@ -54,10 +58,11 @@ class MessageUtils(){
     }
 
     fun checkIsLengthOverMax(msg : String) : Boolean{
-        if(msg.length>MAX_MESSAGE_LENGTH){
-            return true
-        }
-        return false
+        return (msg.length>MAX_MESSAGE_LENGTH)
+    }
+
+    fun checkIsMsgEmpty(msg : String) : Boolean{
+        return msg.length == 0
     }
 
     fun calculateMaxNumSubStr(msg : String) : Int{
@@ -77,7 +82,7 @@ class MessageUtils(){
     fun trimSpacesAndNewlines(msg : String) : String{
         // Replace duplicate whitespaces and newline
         var msgTrimmed =  msg.trim().replace(" +".toRegex(), " ").replace("\n+".toRegex(), "\n")
-        Timber.d("Newline  "+ msgTrimmed)
+        Timber.d("Newline  "+ msgTrimmed.length)
         return msgTrimmed
     }
 

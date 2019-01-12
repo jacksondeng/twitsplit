@@ -45,7 +45,7 @@ class MessageUtilsTest {
     @Test
     fun splitMessage_withSpacesOnly_shorterThan_50(){
         var msg = "          "
-        var output = arrayListOf("")
+        var output = ArrayList<String>()
         Assert.assertEquals(messageUtils.split(msg), output)
     }
 
@@ -54,7 +54,7 @@ class MessageUtilsTest {
     fun splitMessage_withSpacesOnly_longerThan_50(){
         // 50 spaces each
         var msg = "                                                  " + "                                                  "
-        var output = arrayListOf("")
+        var output = ArrayList<String>()
         Assert.assertEquals(messageUtils.split(msg), output)
     }
 
@@ -69,12 +69,12 @@ class MessageUtilsTest {
 
     @Test
     fun splitMessage_withChangingPrefixLength(){
-        "I can't believe Tweeter now supports chunking my messages, so I don't have to do it myself 1234." +
+        var msg = "I can't believe Tweeter now supports chunking my messages, so I don't have to do it myself 1234." +
                 "I can't believe Tweeter now supports chunking my messages, so I don't have to do it myself 1234." +
                 "I can't believe Tweeter now supports chunking my messages, so I don't have to do it myself 1234." +
                 "I can't believe Tweeter now supports chunking my messages, so I don't have to do it it it it iti i itititititititititiit"
-        var output = arrayListOf("1/3 I can't believe Tweeter now supports chunking",
-            "2/3 my messages, so I don't have to do it myself",
+        var output = arrayListOf("1/10 I can't believe Tweeter now supports chunking",
+            "2/10 my messages, so I don't have to do it myself",
             "3/10 1234.I can't believe Tweeter now supports",
             "4/10 chunking my messages, so I don't have to do",
             "5/10 it myself 1234.I can't believe Tweeter now",
@@ -83,6 +83,14 @@ class MessageUtilsTest {
             "8/10 Tweeter now supports chunking my messages, so",
             "9/10 I don't have to do it it it it iti i",
             "10/10 itititititititititiit")
+        Assert.assertEquals(messageUtils.split(msg), output)
+    }
+
+    @Test
+    fun splitMessage_emptyString(){
+        var msg = ""
+        var output = ArrayList<String>()
+        Assert.assertEquals(messageUtils.split(msg), output)
     }
 
 }

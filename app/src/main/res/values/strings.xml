@@ -2,5 +2,6 @@
     <string name="app_name">twitsplit</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_auth">AuthActivity</string>
-
+    <string name="title_activity_base">BaseActivity</string>
+    <string name="tweet">Tweet</string>
 </resources>

@@ -27,21 +27,31 @@ class DynamoDbUtils(private var awsProvider: AWSProvider){
         return tweet
     }
 
-    fun postTweet(msg : String,index : Int){
+    fun postTweet(msgList : List<String>){
+        if(msgList.size == 0){
+            loadingState.postValue(LoadingState.Error)
+            return
+        }
+
         if(awsProvider!!.identityManager.isUserSignedIn && dynamoDBMapper == null){
             initDbClient()
         }
-        thread(start = true) {
-            loadingState.postValue(LoadingState.Posting)
-            dynamoDBMapper?.save(createTweet(msg,index))
-        }.join()
-        readTweet()
+
+        loadingState.postValue(LoadingState.Posting)
+        for(index in msgList.indices) {
+            thread(start = true) {
+                dynamoDBMapper?.save(createTweet(msgList.get(index), index))
+            }.join()
+
+            loadingState.postValue(LoadingState.Loading)
+        }
+        // Wait 200ms before reading tweets
+        Handler().postDelayed({ readTweet() },200)
     }
 
     fun readTweet() : PaginatedQueryList<TweetsDO>?{
-        loadingState.postValue(LoadingState.Loading)
 
-        if(awsProvider!!.identityManager.isUserSignedIn && dynamoDBMapper == null){
+        if(awsProvider.identityManager.isUserSignedIn && dynamoDBMapper == null){
             initDbClient()
         }
         var paginatedQueryList : PaginatedQueryList<TweetsDO> ?= null
@@ -52,10 +62,8 @@ class DynamoDbUtils(private var awsProvider: AWSProvider){
         if(paginatedQueryList==null){
             loadingState.postValue(LoadingState.Failed)
         } else{
-            Handler().postDelayed({
                 loadingState.postValue(LoadingState.Success)
-            },500)
-        }
+          }
         return paginatedQueryList
     }
 
