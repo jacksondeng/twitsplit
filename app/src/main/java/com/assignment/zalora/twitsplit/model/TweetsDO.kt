@@ -9,15 +9,16 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBRangeKey
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable
 
 @DynamoDBTable(tableName = "assignment-mobilehub-88096205-Tweets")
-class TweetsDO(userId : String?, msg : String, creationDate : String) {
+class TweetsDO(){
     @get:DynamoDBHashKey(attributeName = "userId")
     @get:DynamoDBAttribute(attributeName = "userId")
-    var userId: String? = userId
+    var userId: String = ""
 
     @get:DynamoDBRangeKey(attributeName = "creationDate")
     @get:DynamoDBAttribute(attributeName = "creationDate")
-    var creationDate: String? = creationDate
+    var creationDate: String = ""
 
     @get:DynamoDBAttribute(attributeName = "msg")
-    var msg: String? = msg
+    var msg: String? = ""
+
 }

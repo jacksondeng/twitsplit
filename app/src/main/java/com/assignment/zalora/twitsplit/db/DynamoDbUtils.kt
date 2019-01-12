@@ -2,15 +2,14 @@ package com.assignment.zalora.twitsplit.db
 
 import com.amazonaws.mobile.client.AWSMobileClient
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBQueryExpression
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedQueryList
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient
 import com.assignment.zalora.twitsplit.model.TweetsDO
 import com.assignment.zalora.twitsplit.util.AWSProvider
 import timber.log.Timber
-import java.text.SimpleDateFormat
-import java.util.*
 import javax.inject.Singleton
 import kotlin.concurrent.thread
-
 
 @Singleton
 class DynamoDbUtils{
@@ -22,8 +21,10 @@ class DynamoDbUtils{
     }
 
     fun createTweet(msg : String,index: Int) : TweetsDO {
-        val tweet = TweetsDO(awsProvider?.identityManager?.cachedUserID,msg,getCurrentTimeStamp(index))
-        Timber.d("Tweet timestamp " + tweet.creationDate)
+        val tweet = TweetsDO()
+        tweet.userId = awsProvider!!.identityManager?.cachedUserID
+        tweet.msg = msg
+        tweet.creationDate = getCurrentTimeStamp(index)
         return tweet
     }
 
@@ -34,6 +35,23 @@ class DynamoDbUtils{
         thread(start = true) {
             dynamoDBMapper?.save(createTweet(msg,index))
         }
+    }
+
+    fun readTweet() : PaginatedQueryList<TweetsDO>?{
+        if(awsProvider!!.identityManager.isUserSignedIn && dynamoDBMapper == null){
+            initDbClient()
+        }
+        var paginatedQueryList : PaginatedQueryList<TweetsDO> ?= null
+        thread(start = true) {
+            val queryExpression = DynamoDBQueryExpression<TweetsDO>()
+            val tweet = TweetsDO()
+            tweet.userId = awsProvider!!.identityManager?.cachedUserID
+            queryExpression
+                .withHashKeyValues(tweet)
+                .withLimit(10)
+            paginatedQueryList = dynamoDBMapper?.query(TweetsDO::class.java,queryExpression)
+        }.join()
+        return paginatedQueryList
     }
 
     fun initDbClient(){

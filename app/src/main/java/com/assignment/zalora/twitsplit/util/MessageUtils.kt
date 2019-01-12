@@ -7,7 +7,6 @@ class MessageUtils(){
         const val MAX_MESSAGE_LENGTH = 50
     }
 
-
     fun split(msg : String) : List<String>{
         var splitString : List<String> = ArrayList()
         var trimmedMsg = trimSpacesAndNewlines(msg)

@@ -1,5 +1,7 @@
 package com.assignment.zalora.twitsplit.view
 
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -9,6 +11,7 @@ import com.assignment.zalora.twitsplit.R
 import com.assignment.zalora.twitsplit.db.DynamoDbUtils
 import com.assignment.zalora.twitsplit.util.AWSProvider
 import com.assignment.zalora.twitsplit.util.MessageUtils
+import com.assignment.zalora.twitsplit.viewmodel.TweetVM
 import dagger.android.AndroidInjection
 import dagger.android.support.DaggerAppCompatActivity
 
@@ -21,10 +24,8 @@ import javax.inject.Inject
 class MainActivity : DaggerAppCompatActivity() {
 
     @Inject
-    lateinit var awsProvider: AWSProvider
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    @Inject
-    lateinit var dynamoDbUtils : DynamoDbUtils
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,49 +33,27 @@ class MainActivity : DaggerAppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        var msg = "                                                  " + "                                                  "
+        val tweetVM = ViewModelProviders.of(this, viewModelFactory)[TweetVM::class.java]
+
+        var msg ="I can't believe Tweeter now supports chunk"
         val msgUtils = MessageUtils()
         var msgList : List<String>
 
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
-            if(msg.length>50){
-                msgList = msgUtils.split(msg)
-            } else{
-                msgList = arrayListOf(msg)
-            }
 
+            /*msgList = msgUtils.split(msg)
             for(index in msgList.indices){
                 Timber.d("msg " + msgList.get(index))
-                dynamoDbUtils.postTweet(msgList.get(index),index)
-            }
-
+                tweetVM.postTweet(msgList.get(index),index)
+            }*/
+            tweetVM.readTweets()
         }
 
-        if (!awsProvider.identityManager.isUserSignedIn) {
+        if (!tweetVM.isUserSignedIn) {
             val intent = Intent(this, AuthActivity::class.java)
             startActivity(intent)
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
         }
     }
 

@@ -67,5 +67,22 @@ class MessageUtilsTest {
     }
 
 
+    @Test
+    fun splitMessage_withChangingPrefixLength(){
+        "I can't believe Tweeter now supports chunking my messages, so I don't have to do it myself 1234." +
+                "I can't believe Tweeter now supports chunking my messages, so I don't have to do it myself 1234." +
+                "I can't believe Tweeter now supports chunking my messages, so I don't have to do it myself 1234." +
+                "I can't believe Tweeter now supports chunking my messages, so I don't have to do it it it it iti i itititititititititiit"
+        var output = arrayListOf("1/3 I can't believe Tweeter now supports chunking",
+            "2/3 my messages, so I don't have to do it myself",
+            "3/10 1234.I can't believe Tweeter now supports",
+            "4/10 chunking my messages, so I don't have to do",
+            "5/10 it myself 1234.I can't believe Tweeter now",
+            "6/10 supports chunking my messages, so I don't",
+            "7/10 have to do it myself 1234.I can't believe",
+            "8/10 Tweeter now supports chunking my messages, so",
+            "9/10 I don't have to do it it it it iti i",
+            "10/10 itititititititititiit")
+    }
 
 }
