@@ -21,17 +21,18 @@ class DynamoDbUtils{
         this.awsProvider = awsProvider
     }
 
-    fun createTweet(msg : String) : TweetsDO {
-        val tweet = TweetsDO(awsProvider?.identityManager?.cachedUserID,msg,getCurrentTimeStamp())
+    fun createTweet(msg : String,index: Int) : TweetsDO {
+        val tweet = TweetsDO(awsProvider?.identityManager?.cachedUserID,msg,getCurrentTimeStamp(index))
+        Timber.d("Tweet timestamp " + tweet.creationDate)
         return tweet
     }
 
-    fun postTweet(tweetsDO: TweetsDO){
-        if(awsProvider!!.identityManager?.isUserSignedIn && dynamoDBMapper == null){
+    fun postTweet(msg : String,index : Int){
+        if(awsProvider!!.identityManager.isUserSignedIn && dynamoDBMapper == null){
             initDbClient()
         }
         thread(start = true) {
-            dynamoDBMapper?.save(tweetsDO)
+            dynamoDBMapper?.save(createTweet(msg,index))
         }
     }
 
@@ -43,9 +44,7 @@ class DynamoDbUtils{
             .build()
     }
 
-    fun getCurrentTimeStamp() : String{
-        //val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
-        //return sdf.format(Date())
-        return System.currentTimeMillis().toString()
+    fun getCurrentTimeStamp(prefix : Int) : String{
+        return (System.currentTimeMillis()+prefix).toString()
     }
 }

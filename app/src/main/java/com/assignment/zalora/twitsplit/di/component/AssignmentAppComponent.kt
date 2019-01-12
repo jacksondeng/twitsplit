@@ -2,7 +2,7 @@ package com.assignment.zalora.twitsplit.di.component
 
 import android.app.Application
 import javax.inject.Singleton
-import com.assignment.zalora.twitsplit.AssignmentApp
+import com.assignment.zalora.twitsplit.app.AssignmentApp
 import com.assignment.zalora.twitsplit.di.module.ActivityBindingModule
 import com.assignment.zalora.twitsplit.di.module.DataModule
 import dagger.BindsInstance

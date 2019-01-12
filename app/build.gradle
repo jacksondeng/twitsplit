@@ -7,6 +7,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
+
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.zalora.assignment"
@@ -39,6 +40,7 @@ android {
 }
 
 dependencies {
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "com.android.support:appcompat-v7:$android_sdk_version"
@@ -63,13 +65,6 @@ dependencies {
 
     // ViewModel and LiveData
     implementation "android.arch.lifecycle:extensions:$arch_components_version"
-
-
-    // Room
-    implementation "android.arch.persistence.room:runtime:$arch_components_version"
-    annotationProcessor "android.arch.persistence.room:compiler:$arch_components_version"
-    annotationProcessor "com.android.databinding:compiler:$data_binding_version"
-    kapt "android.arch.persistence.room:compiler:$arch_components_version"
 
     // Gson
     implementation "com.google.code.gson:gson:$gson_version"

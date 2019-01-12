@@ -1,10 +1,9 @@
-package com.assignment.zalora.twitsplit
+package com.assignment.zalora.twitsplit.view
 
 import android.arch.lifecycle.Observer
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity;
 import com.amazonaws.mobile.auth.ui.SignInUI
+import com.assignment.zalora.twitsplit.R
 import com.assignment.zalora.twitsplit.util.AWSInstanceState
 import com.assignment.zalora.twitsplit.util.AWSProvider
 import dagger.android.AndroidInjection

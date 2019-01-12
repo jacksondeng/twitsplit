@@ -1,29 +1,21 @@
-package com.assignment.zalora.twitsplit
+package com.assignment.zalora.twitsplit.view
 
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu
 import android.view.MenuItem
-import com.amazonaws.mobile.client.AWSMobileClient
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient
+import com.assignment.zalora.twitsplit.R
 import com.assignment.zalora.twitsplit.db.DynamoDbUtils
-import com.assignment.zalora.twitsplit.model.TweetsDO
 import com.assignment.zalora.twitsplit.util.AWSProvider
 import com.assignment.zalora.twitsplit.util.MessageUtils
 import dagger.android.AndroidInjection
 import dagger.android.support.DaggerAppCompatActivity
 
 import kotlinx.android.synthetic.main.activity_main.*
-import net.danlew.android.joda.JodaTimeAndroid
 import timber.log.Timber
-import java.text.SimpleDateFormat
-import java.time.LocalDateTime
 import java.util.*
 import javax.inject.Inject
-import kotlin.concurrent.thread
 
 
 class MainActivity : DaggerAppCompatActivity() {
@@ -40,9 +32,9 @@ class MainActivity : DaggerAppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        val msg = "I can't believe Tweeter now supports chunking my messages, so I don't have to do it myself."
+        var msg = "                                                  " + "                                                  "
         val msgUtils = MessageUtils()
-        var msgList : List<String> = ArrayList()
+        var msgList : List<String>
 
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -53,10 +45,9 @@ class MainActivity : DaggerAppCompatActivity() {
                 msgList = arrayListOf(msg)
             }
 
-
-            for(msg in msgList){
-                Timber.d("msg " + msg)
-                dynamoDbUtils.postTweet(dynamoDbUtils.createTweet(msg))
+            for(index in msgList.indices){
+                Timber.d("msg " + msgList.get(index))
+                dynamoDbUtils.postTweet(msgList.get(index),index)
             }
 
         }

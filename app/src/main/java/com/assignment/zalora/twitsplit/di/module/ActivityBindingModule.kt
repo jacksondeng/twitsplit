@@ -1,8 +1,8 @@
 package com.assignment.zalora.twitsplit.di.module
 
-import com.assignment.zalora.twitsplit.AuthActivity
+import com.assignment.zalora.twitsplit.view.AuthActivity
 import dagger.android.ContributesAndroidInjector
-import com.assignment.zalora.twitsplit.MainActivity
+import com.assignment.zalora.twitsplit.view.MainActivity
 import dagger.Module
 
 

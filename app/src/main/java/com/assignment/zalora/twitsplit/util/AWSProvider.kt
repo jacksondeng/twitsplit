@@ -31,7 +31,7 @@ class AWSProvider {
         if (instance == null) {
             AWSMobileClient.getInstance().initialize(context).execute()
             instance = AWSMobileClient.getInstance()
-            instanceState?.postValue(AWSInstanceState.Initialized)
+            instanceState.postValue(AWSInstanceState.Initialized)
         }
     }
 }

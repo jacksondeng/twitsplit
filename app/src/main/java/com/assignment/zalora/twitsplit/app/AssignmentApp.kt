@@ -1,9 +1,9 @@
-package com.assignment.zalora.twitsplit
+package com.assignment.zalora.twitsplit.app
 
 import android.app.Activity
 import android.app.Application
+import com.assignment.zalora.twitsplit.BuildConfig
 import com.assignment.zalora.twitsplit.di.component.DaggerAssignmentAppComponent
-import com.assignment.zalora.twitsplit.util.AWSInstanceState
 import com.assignment.zalora.twitsplit.util.AWSProvider
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
