@@ -14,10 +14,12 @@
             app:layout_constraintVertical_bias="0.5"
             android:id="@+id/input_msg_et"
             android:layout_width="0dp"
-            app:layout_constraintWidth_percent="0.65"
+            app:layout_constraintWidth_percent="0.75"
             android:layout_height="wrap_content"
             android:padding="@dimen/fragment_input_msg_et_padding"/>
-    <Button
+    <ImageButton
+            android:background="@android:color/transparent"
+            android:src="@android:drawable/ic_menu_send"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/input_msg_et"

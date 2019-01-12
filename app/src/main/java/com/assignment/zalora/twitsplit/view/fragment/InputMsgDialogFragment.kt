@@ -10,14 +10,16 @@ import android.view.WindowManager
 import android.widget.EditText
 import com.assignment.zalora.twitsplit.R
 import android.content.DialogInterface
+import android.media.Image
 import android.widget.Button
+import android.widget.ImageButton
 import com.assignment.zalora.twitsplit.view.dialog.OnDataPass
 
 class InputMsgDialogFragment : DialogFragment() {
     // Interface to pass msg back to activity on fragment dismissal
     var dataPasser : OnDataPass ?= null
     var msgEt : EditText ?= null
-    var btnTweet : Button?= null
+    var btnTweet : ImageButton?= null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
@@ -31,9 +33,9 @@ class InputMsgDialogFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        msgEt = view.findViewById<EditText>(R.id.input_msg_et)
+        msgEt = view.findViewById(R.id.input_msg_et)
         msgEt?.requestFocus();
-        btnTweet = view.findViewById<Button>(R.id.btn_tweet)
+        btnTweet = view.findViewById(R.id.btn_tweet)
         initListeners()
     }
 
@@ -41,7 +43,6 @@ class InputMsgDialogFragment : DialogFragment() {
         super.onDismiss(dialog)
         passData(msgEt?.text.toString())
     }
-
 
     // Pass msg back to activity on fragment dismissal
     fun passData(data: String) {

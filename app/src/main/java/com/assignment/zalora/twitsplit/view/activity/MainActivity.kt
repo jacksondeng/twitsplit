@@ -33,6 +33,7 @@ class MainActivity : BaseActivity(),OnDataPass {
     fun showInputMsgDialog(){
         var fm : FragmentManager = getSupportFragmentManager();
         var inputMsgDialog = InputMsgDialogFragment();
+        inputMsgDialog.isCancelable = false
         inputMsgDialog.show(fm, "fragment_edit_name");
     }
 
