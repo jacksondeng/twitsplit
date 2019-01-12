@@ -13,6 +13,7 @@ import com.assignment.zalora.twitsplit.R
 import com.assignment.zalora.twitsplit.db.DynamoDbUtils
 import com.assignment.zalora.twitsplit.model.TweetsDO
 import com.assignment.zalora.twitsplit.util.AWSProvider
+import com.assignment.zalora.twitsplit.util.LoadingState
 import com.assignment.zalora.twitsplit.util.MessageUtils
 import com.assignment.zalora.twitsplit.viewmodel.TweetVM
 import dagger.android.AndroidInjection
@@ -54,6 +55,29 @@ class MainActivity : DaggerAppCompatActivity() {
             tweetVM.readTweets()
             tweetVM.tweetList.observe(this,Observer<PaginatedQueryList<TweetsDO>> {
                 tweetVM.iterateTweets()
+            })
+
+            tweetVM.loadingState.observe(this, Observer {
+                when(it){
+                    LoadingState.Loading ->{
+                        Timber.d("LoadingState Loading")
+                    }
+
+                    LoadingState.Posting ->{
+
+                        Timber.d("LoadingState Posting")
+                    }
+
+                    LoadingState.Success ->{
+
+                        Timber.d("LoadingState Success")
+                    }
+
+                    LoadingState.Failed ->{
+
+                        Timber.d("LoadingState Failed")
+                    }
+                }
             })
         }
 

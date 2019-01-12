@@ -7,9 +7,7 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedQueryLi
 import com.assignment.zalora.twitsplit.db.DynamoDbUtils
 import com.assignment.zalora.twitsplit.model.TweetsDO
 import com.assignment.zalora.twitsplit.util.AWSProvider
-import com.assignment.zalora.twitsplit.util.MessageUtils
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import com.assignment.zalora.twitsplit.util.LoadingState
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -18,6 +16,7 @@ class TweetVM @Inject constructor(private val dynamoDbUtils: DynamoDbUtils, priv
 
     var tweetList : MutableLiveData<PaginatedQueryList<TweetsDO>> = MutableLiveData()
     var isUserSignedIn : Boolean
+    var loadingState : MutableLiveData<LoadingState> = dynamoDbUtils.loadingState
     init {
         this.isUserSignedIn = awsProvider.identityManager.isUserSignedIn()
     }
