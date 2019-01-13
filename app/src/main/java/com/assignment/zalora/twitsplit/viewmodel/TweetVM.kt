@@ -15,6 +15,7 @@ class TweetVM @Inject constructor(private val dynamoDbUtils: DynamoDbUtils, priv
     : ViewModel(), LifecycleObserver {
 
     var tweetList : MutableLiveData<PaginatedQueryList<TweetsDO>> = dynamoDbUtils.tweetList
+    var simpleList : MutableLiveData<MutableList<TweetsDO>> = dynamoDbUtils.simpleList
     var isUserSignedIn : Boolean
     var loadingState : MutableLiveData<LoadingState> = dynamoDbUtils.loadingState
     init {
@@ -25,14 +26,11 @@ class TweetVM @Inject constructor(private val dynamoDbUtils: DynamoDbUtils, priv
         dynamoDbUtils.postTweet(msgList)
     }
 
-    fun loadTweets(){
+    fun loadTweets() {
         dynamoDbUtils.loadTweets()
     }
 
-    fun iterateTweets(){
-        tweetList.value!!.forEach {
-            Timber.d("Tweets " + it.msg)
-        }
+    fun deleteTweets(tweetsDO: TweetsDO){
+        dynamoDbUtils.deleteTweet(tweetsDO)
     }
-
 }

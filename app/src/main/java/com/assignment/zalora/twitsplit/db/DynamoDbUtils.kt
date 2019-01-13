@@ -10,6 +10,7 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient
 import com.assignment.zalora.twitsplit.model.TweetsDO
 import com.assignment.zalora.twitsplit.util.aws.AWSProvider
 import com.assignment.zalora.twitsplit.util.state.LoadingState
+import timber.log.Timber
 import javax.inject.Singleton
 import kotlin.concurrent.thread
 
@@ -18,6 +19,7 @@ class DynamoDbUtils(private var awsProvider: AWSProvider){
     private var dynamoDBMapper: DynamoDBMapper ? = null
     var loadingState : MutableLiveData<LoadingState> = MutableLiveData()
     var tweetList : MutableLiveData<PaginatedQueryList<TweetsDO>> = MutableLiveData()
+    var simpleList : MutableLiveData<MutableList<TweetsDO>> = MutableLiveData()
 
     fun createTweet(msg : String,index: Int) : TweetsDO {
         val tweet = TweetsDO()
@@ -33,9 +35,7 @@ class DynamoDbUtils(private var awsProvider: AWSProvider){
             return
         }
 
-        if(awsProvider.identityManager.isUserSignedIn && dynamoDBMapper == null){
-            initDbClient()
-        }
+        initDbClient()
 
         loadingState.postValue(LoadingState.Posting)
         for(index in msgList.indices) {
@@ -45,15 +45,23 @@ class DynamoDbUtils(private var awsProvider: AWSProvider){
 
             loadingState.postValue(LoadingState.Loading)
         }
-        // Wait 200ms before reading tweets
+        // Wait 200ms before loading tweets
+        Handler().postDelayed({ loadTweets() },200)
+    }
+
+    fun deleteTweet(tweetsDO: TweetsDO){
+        initDbClient()
+        loadingState.postValue(LoadingState.Posting)
+        thread(start = true) {
+            dynamoDBMapper?.delete(tweetsDO)
+        }.join()
+        loadingState.postValue(LoadingState.Loading)
+        // Wait 200ms before loading tweets
         Handler().postDelayed({ loadTweets() },200)
     }
 
     fun loadTweets(){
-
-        if(awsProvider.identityManager.isUserSignedIn && dynamoDBMapper == null){
-            initDbClient()
-        }
+        initDbClient()
         var paginatedQueryList : PaginatedQueryList<TweetsDO> ?= null
         thread(start = true) {
             paginatedQueryList = dynamoDBMapper?.query(TweetsDO::class.java,createQueryExpression(30))
@@ -64,6 +72,7 @@ class DynamoDbUtils(private var awsProvider: AWSProvider){
         } else{
             loadingState.postValue(LoadingState.Success)
         }
+        simpleList.postValue(convertPaginatedListToList(paginatedQueryList))
         tweetList.postValue(paginatedQueryList)
     }
 
@@ -78,14 +87,27 @@ class DynamoDbUtils(private var awsProvider: AWSProvider){
     }
 
     fun initDbClient(){
-        val client = AmazonDynamoDBClient(awsProvider!!.identityManager.credentialsProvider)
-        dynamoDBMapper = DynamoDBMapper.builder()
-            .dynamoDBClient(client)
-            .awsConfiguration(AWSMobileClient.getInstance().configuration)
-            .build()
+        if(awsProvider.identityManager.isUserSignedIn && dynamoDBMapper == null) {
+
+            val client = AmazonDynamoDBClient(awsProvider!!.identityManager.credentialsProvider)
+            dynamoDBMapper = DynamoDBMapper.builder()
+                .dynamoDBClient(client)
+                .awsConfiguration(AWSMobileClient.getInstance().configuration)
+                .build()
+        }
     }
 
     fun getCurrentTimeStamp(prefix : Int) : String{
         return (System.currentTimeMillis()+prefix).toString()
+    }
+
+    fun convertPaginatedListToList(paginatedQueryList: PaginatedQueryList<TweetsDO>?) : MutableList<TweetsDO>{
+        var list = ArrayList<TweetsDO>()
+        if(paginatedQueryList!=null) {
+            paginatedQueryList.forEach {
+                list.add(it)
+            }
+        }
+        return list
     }
 }

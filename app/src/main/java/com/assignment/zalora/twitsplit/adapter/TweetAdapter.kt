@@ -5,14 +5,14 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedQueryList
 import com.assignment.zalora.twitsplit.R
 import com.assignment.zalora.twitsplit.model.TweetsDO
+import com.assignment.zalora.twitsplit.viewmodel.TweetVM
 import kotlinx.android.synthetic.main.tweet_item.view.*
 import org.joda.time.DateTime
 
 
-class TweetAdapter(var tweets : PaginatedQueryList<TweetsDO>,val context: Context): RecyclerView.Adapter<TweetAdapter.ViewHolder>(){
+class TweetAdapter(var tweets : MutableList<TweetsDO>,val context: Context, val tweetVM: TweetVM): RecyclerView.Adapter<TweetAdapter.ViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): TweetAdapter.ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.tweet_item, parent, false))
@@ -33,7 +33,7 @@ class TweetAdapter(var tweets : PaginatedQueryList<TweetsDO>,val context: Contex
     }
 
 
-    fun setTweetList(tweets: PaginatedQueryList<TweetsDO>){
+    fun setTweetList(tweets: MutableList<TweetsDO>){
         this.tweets = tweets
         this.notifyDataSetChanged()
     }
@@ -44,6 +44,7 @@ class TweetAdapter(var tweets : PaginatedQueryList<TweetsDO>,val context: Contex
     }
 
     fun removeAt(position: Int) {
+        tweetVM.deleteTweets(tweets.get(position))
         tweets.removeAt(position)
         notifyItemRemoved(position)
     }

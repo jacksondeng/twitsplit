@@ -63,7 +63,7 @@ class MainActivity : BaseActivity(), OnDataPass {
     }
 
     fun initTweetListObserver(){
-        tweetVM.tweetList.observe(this, Observer {
+        tweetVM.simpleList.observe(this, Observer {
             when(it){
                 null -> {
                     Timber.d("TweetList null")
@@ -83,9 +83,9 @@ class MainActivity : BaseActivity(), OnDataPass {
 
     fun initAdapter(){
         if(tweetAdapter == null) {
-            tweetAdapter = TweetAdapter(tweetVM.tweetList.value!!, this)
+            tweetAdapter = TweetAdapter(tweetVM.simpleList.value!!, this,tweetVM)
         }else{
-            tweetAdapter?.setTweetList(tweetVM.tweetList.value!!)
+            tweetAdapter?.setTweetList(tweetVM.simpleList.value!!)
         }
         val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback(tweetAdapter!!))
         itemTouchHelper.attachToRecyclerView(tweet_list)
