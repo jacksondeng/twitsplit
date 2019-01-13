@@ -10,12 +10,6 @@ import com.assignment.zalora.twitsplit.R
 import com.assignment.zalora.twitsplit.model.TweetsDO
 import kotlinx.android.synthetic.main.tweet_item.view.*
 import org.joda.time.DateTime
-import timber.log.Timber
-import org.joda.time.format.DateTimeFormat
-import android.text.method.TextKeyListener.clear
-
-
-
 
 
 class TweetAdapter(var tweets : PaginatedQueryList<TweetsDO>,val context: Context): RecyclerView.Adapter<TweetAdapter.ViewHolder>(){
@@ -44,14 +38,13 @@ class TweetAdapter(var tweets : PaginatedQueryList<TweetsDO>,val context: Contex
         this.notifyDataSetChanged()
     }
 
-    fun clear() {
-        tweets.clear();
-        notifyDataSetChanged();
-    }
-
-
     fun getDateTimeFromLong(millis : Long) :String{
         var dt = DateTime(millis)
         return dt.toLocalDateTime().toString()
+    }
+
+    fun removeAt(position: Int) {
+        tweets.removeAt(position)
+        notifyItemRemoved(position)
     }
 }

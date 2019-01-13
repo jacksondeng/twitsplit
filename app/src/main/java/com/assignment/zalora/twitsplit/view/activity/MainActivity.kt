@@ -2,6 +2,7 @@ package com.assignment.zalora.twitsplit.view.activity
 
 import android.arch.lifecycle.Observer
 import android.content.Intent
+import android.graphics.drawable.ClipDrawable.HORIZONTAL
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import com.assignment.zalora.twitsplit.R
@@ -13,6 +14,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import timber.log.Timber
 import android.support.v4.widget.SwipeRefreshLayout
+import android.support.v7.widget.DividerItemDecoration
+import com.assignment.zalora.twitsplit.util.adapter.SwipeToDeleteCallback
+import android.support.v7.widget.helper.ItemTouchHelper
 
 
 
@@ -83,10 +87,14 @@ class MainActivity : BaseActivity(), OnDataPass {
         }else{
             tweetAdapter?.setTweetList(tweetVM.tweetList.value!!)
         }
+        val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback(tweetAdapter!!))
+        itemTouchHelper.attachToRecyclerView(tweet_list)
         tweet_list.adapter = tweetAdapter
         tweet_list.setLayoutManager(LinearLayoutManager(this))
+        tweet_list.addItemDecoration(DividerItemDecoration(this, HORIZONTAL))
         swipe_container.isRefreshing = false
     }
+
 
 }
 
