@@ -9,11 +9,9 @@ import com.assignment.zalora.twitsplit.R
 import com.assignment.zalora.twitsplit.adapter.TweetAdapter
 import com.assignment.zalora.twitsplit.util.MessageUtils
 import com.assignment.zalora.twitsplit.util.dialogFragment.OnDataPass
-
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import timber.log.Timber
-import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.DividerItemDecoration
 import com.assignment.zalora.twitsplit.util.adapter.SwipeToDeleteCallback
 import android.support.v7.widget.helper.ItemTouchHelper
@@ -29,11 +27,6 @@ class MainActivity : BaseActivity(), OnDataPass {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
-        if(checkIfUserSignedIn()){
-            loadTweets()
-        }else{
-            gotoAuth()
-        }
         initListeners()
         initTweetListObserver()
     }
@@ -44,18 +37,7 @@ class MainActivity : BaseActivity(), OnDataPass {
 
     override fun onResume() {
         super.onResume()
-        if(checkIfUserSignedIn()) {
-            loadTweets()
-        }
-    }
-
-    fun checkIfUserSignedIn() : Boolean{
-        return tweetVM.isUserSignedIn
-    }
-
-    fun gotoAuth(){
-        val intent = Intent(this, AuthActivity::class.java)
-        startActivity(intent)
+        loadTweets()
     }
 
     fun loadTweets(){
@@ -63,7 +45,7 @@ class MainActivity : BaseActivity(), OnDataPass {
     }
 
     fun initTweetListObserver(){
-        tweetVM.simpleList.observe(this, Observer {
+        tweetVM.tweetList.observe(this, Observer {
             when(it){
                 null -> {
                     Timber.d("TweetList null")
@@ -83,9 +65,9 @@ class MainActivity : BaseActivity(), OnDataPass {
 
     fun initAdapter(){
         if(tweetAdapter == null) {
-            tweetAdapter = TweetAdapter(tweetVM.simpleList.value!!, this,tweetVM)
+            tweetAdapter = TweetAdapter(tweetVM.tweetList.value!!, this,tweetVM)
         }else{
-            tweetAdapter?.setTweetList(tweetVM.simpleList.value!!)
+            tweetAdapter?.setTweetList(tweetVM.tweetList.value!!)
         }
         val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback(tweetAdapter!!))
         itemTouchHelper.attachToRecyclerView(tweet_list)

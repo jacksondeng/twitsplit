@@ -57,13 +57,8 @@ open class BaseActivity : DaggerAppCompatActivity(), StatusUtils {
     fun initObservers(){
         tweetVM.loadingState.observe(this, Observer {
             when(it){
-                LoadingState.Loading ->{
+                LoadingState.Loading,LoadingState.Deleting,LoadingState.Posting ->{
                     Timber.d("LoadingState Loading")
-                    showLoading()
-                }
-
-                LoadingState.Posting ->{
-                    Timber.d("LoadingState Posting")
                     showLoading()
                 }
 
@@ -74,7 +69,7 @@ open class BaseActivity : DaggerAppCompatActivity(), StatusUtils {
 
                 LoadingState.Failed ->{
                     Timber.d("LoadingState Failed")
-                    showError("sg")
+                    hideLoading()
                 }
 
                 LoadingState.Error ->{

@@ -16,8 +16,6 @@ class AssignmentApp : Application(), HasActivityInjector {
 
     @Inject
     lateinit var dispatchingAndroidInjector : DispatchingAndroidInjector<Activity>;
-    @Inject
-    lateinit var awsProvider: AWSProvider
 
     override fun activityInjector() : DispatchingAndroidInjector<Activity> {
         return dispatchingAndroidInjector;
@@ -31,9 +29,7 @@ class AssignmentApp : Application(), HasActivityInjector {
         }
         // Init JodaTime
         JodaTimeAndroid.init(this);
-
         initDagger();
-        awsProvider.initialize(this)
     }
 
     fun initDagger() {

@@ -8,14 +8,12 @@ import com.assignment.zalora.twitsplit.db.DynamoDbUtils
 import com.assignment.zalora.twitsplit.model.TweetsDO
 import com.assignment.zalora.twitsplit.util.aws.AWSProvider
 import com.assignment.zalora.twitsplit.util.state.LoadingState
-import timber.log.Timber
 import javax.inject.Inject
 
 class TweetVM @Inject constructor(private val dynamoDbUtils: DynamoDbUtils, private val awsProvider: AWSProvider)
     : ViewModel(), LifecycleObserver {
 
-    var tweetList : MutableLiveData<PaginatedQueryList<TweetsDO>> = dynamoDbUtils.tweetList
-    var simpleList : MutableLiveData<MutableList<TweetsDO>> = dynamoDbUtils.simpleList
+    var tweetList : MutableLiveData<MutableList<TweetsDO>> = dynamoDbUtils.tweetList
     var isUserSignedIn : Boolean
     var loadingState : MutableLiveData<LoadingState> = dynamoDbUtils.loadingState
     init {

@@ -5,10 +5,11 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.assignment.zalora.twitsplit.view.activity.AuthActivity">
+        tools:context="com.assignment.zalora.twitsplit.view.activity.SplashActivity"
+        android:background="@android:color/black">
 
 
-    <include layout="@layout/content_auth"/>
+    <include layout="@layout/content_splash"/>
 
 
 </android.support.design.widget.CoordinatorLayout>

@@ -10,7 +10,6 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient
 import com.assignment.zalora.twitsplit.model.TweetsDO
 import com.assignment.zalora.twitsplit.util.aws.AWSProvider
 import com.assignment.zalora.twitsplit.util.state.LoadingState
-import timber.log.Timber
 import javax.inject.Singleton
 import kotlin.concurrent.thread
 
@@ -18,8 +17,7 @@ import kotlin.concurrent.thread
 class DynamoDbUtils(private var awsProvider: AWSProvider){
     private var dynamoDBMapper: DynamoDBMapper ? = null
     var loadingState : MutableLiveData<LoadingState> = MutableLiveData()
-    var tweetList : MutableLiveData<PaginatedQueryList<TweetsDO>> = MutableLiveData()
-    var simpleList : MutableLiveData<MutableList<TweetsDO>> = MutableLiveData()
+    var tweetList : MutableLiveData<MutableList<TweetsDO>> = MutableLiveData()
 
     fun createTweet(msg : String,index: Int) : TweetsDO {
         val tweet = TweetsDO()
@@ -51,7 +49,7 @@ class DynamoDbUtils(private var awsProvider: AWSProvider){
 
     fun deleteTweet(tweetsDO: TweetsDO){
         initDbClient()
-        loadingState.postValue(LoadingState.Posting)
+        loadingState.postValue(LoadingState.Deleting)
         thread(start = true) {
             dynamoDBMapper?.delete(tweetsDO)
         }.join()
@@ -64,7 +62,7 @@ class DynamoDbUtils(private var awsProvider: AWSProvider){
         initDbClient()
         var paginatedQueryList : PaginatedQueryList<TweetsDO> ?= null
         thread(start = true) {
-            paginatedQueryList = dynamoDBMapper?.query(TweetsDO::class.java,createQueryExpression(30))
+            paginatedQueryList = dynamoDBMapper?.query(TweetsDO::class.java,createQueryExpression(10))
         }.join()
 
         if(paginatedQueryList==null){
@@ -72,8 +70,7 @@ class DynamoDbUtils(private var awsProvider: AWSProvider){
         } else{
             loadingState.postValue(LoadingState.Success)
         }
-        simpleList.postValue(convertPaginatedListToList(paginatedQueryList))
-        tweetList.postValue(paginatedQueryList)
+        tweetList.postValue(convertPaginatedListToList(paginatedQueryList))
     }
 
     fun createQueryExpression(limit : Int) : DynamoDBQueryExpression<TweetsDO>{
@@ -103,11 +100,13 @@ class DynamoDbUtils(private var awsProvider: AWSProvider){
 
     fun convertPaginatedListToList(paginatedQueryList: PaginatedQueryList<TweetsDO>?) : MutableList<TweetsDO>{
         var list = ArrayList<TweetsDO>()
-        if(paginatedQueryList!=null) {
-            paginatedQueryList.forEach {
-                list.add(it)
+        thread(start = true) {
+            if (paginatedQueryList != null) {
+                paginatedQueryList.forEach {
+                    list.add(it)
+                }
             }
-        }
+        }.join()
         return list
     }
 }

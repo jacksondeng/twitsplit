@@ -6,5 +6,8 @@
     <string name="tweet">Tweet</string>
     <string name="dismiss">Dismiss</string>
     <string name="invalid_input">Invalid input</string>
-    <string name="invalid_input_msg">The tweet must not contains a span of non-whitespace characters longer than 50 characters and must not be empty</string>
+    <string name="invalid_input_msg">The tweet must not contains a span of non-whitespace characters longer than 50
+        characters and must not be empty
+    </string>
+    <string name="title_activity_splash">SplashActivity</string>
 </resources>

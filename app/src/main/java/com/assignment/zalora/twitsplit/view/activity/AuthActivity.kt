@@ -1,7 +1,9 @@
 package com.assignment.zalora.twitsplit.view.activity
 
 import android.arch.lifecycle.Observer
+import android.graphics.Color
 import android.os.Bundle
+import com.amazonaws.mobile.auth.ui.AuthUIConfiguration
 import com.amazonaws.mobile.auth.ui.SignInUI
 import com.assignment.zalora.twitsplit.R
 import com.assignment.zalora.twitsplit.util.aws.AWSInstanceState
@@ -22,26 +24,19 @@ class AuthActivity : DaggerAppCompatActivity() {
         super.onCreate(savedInstanceState)
         AndroidInjection.inject(this)
         setContentView(R.layout.activity_auth)
-        setSupportActionBar(toolbar)
-        observeInstanceState()
-        awsProvider.instanceState.postValue(AWSInstanceState.Initialized)
-    }
-
-    fun observeInstanceState(){
-        awsProvider.instanceState.observe(this, Observer {
-                instanceState ->
-                Timber.d("instanceState $instanceState")
-                when(instanceState){
-                    AWSInstanceState.Initialized ->{
-                        promptLogin()
-                    }
-                }
-        })
+        promptLogin()
     }
 
     fun promptLogin(){
         val ui = awsProvider.instance!!.getClient(this, SignInUI::class.java) as SignInUI
-        ui.login(this, MainActivity::class.java).execute()
+        val config = AuthUIConfiguration.Builder()
+            .userPools(true)
+            .logoResId(R.drawable.logo)
+            .backgroundColor(Color.WHITE)
+            .isBackgroundColorFullScreen(true)
+            .fontFamily("sans-serif-light") // font
+            .canCancel(true)
+            .build()
+        ui.login(this, MainActivity::class.java).authUIConfiguration(config).execute()
     }
-
 }
