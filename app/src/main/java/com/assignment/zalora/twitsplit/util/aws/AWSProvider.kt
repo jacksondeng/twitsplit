@@ -1,4 +1,4 @@
-package com.assignment.zalora.twitsplit.util
+package com.assignment.zalora.twitsplit.util.aws
 
 import android.arch.lifecycle.MutableLiveData
 import android.content.Context

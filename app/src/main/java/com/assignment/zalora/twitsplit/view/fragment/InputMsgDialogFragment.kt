@@ -1,5 +1,6 @@
 package com.assignment.zalora.twitsplit.view.fragment
 
+import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
@@ -10,14 +11,12 @@ import android.view.WindowManager
 import android.widget.EditText
 import com.assignment.zalora.twitsplit.R
 import android.content.DialogInterface
-import android.media.Image
-import android.widget.Button
 import android.widget.ImageButton
-import com.assignment.zalora.twitsplit.view.dialog.OnDataPass
+import com.assignment.zalora.twitsplit.util.dialogFragment.OnDataPass
 
 class InputMsgDialogFragment : DialogFragment() {
     // Interface to pass msg back to activity on fragment dismissal
-    var dataPasser : OnDataPass ?= null
+    var dataPasser : OnDataPass?= null
     var msgEt : EditText ?= null
     var btnTweet : ImageButton?= null
 
@@ -33,10 +32,13 @@ class InputMsgDialogFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        msgEt = view.findViewById(R.id.input_msg_et)
-        msgEt?.requestFocus();
-        btnTweet = view.findViewById(R.id.btn_tweet)
+        initViews(view)
         initListeners()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        initDialogSize(dialog)
     }
 
     override fun onDismiss(dialog: DialogInterface?) {
@@ -47,6 +49,18 @@ class InputMsgDialogFragment : DialogFragment() {
     // Pass msg back to activity on fragment dismissal
     fun passData(data: String) {
         dataPasser?.onDataPass(data)
+    }
+
+    fun initViews(view: View){
+        msgEt = view.findViewById(R.id.input_msg_et)
+        msgEt?.requestFocus();
+        btnTweet = view.findViewById(R.id.btn_tweet)
+    }
+
+    fun initDialogSize(dialog : Dialog){
+        val width = WindowManager.LayoutParams.MATCH_PARENT
+        val height = WindowManager.LayoutParams.WRAP_CONTENT
+        dialog.window?.setLayout(width, height)
     }
 
     fun initListeners(){

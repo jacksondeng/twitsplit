@@ -1,4 +1,4 @@
-package com.assignment.zalora.twitsplit.view.dialog
+package com.assignment.zalora.twitsplit.util.dialogFragment
 
 import android.content.DialogInterface
 

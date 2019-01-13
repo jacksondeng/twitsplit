@@ -1,4 +1,4 @@
-package com.assignment.zalora.twitsplit.util
+package com.assignment.zalora.twitsplit.util.state
 
 sealed class LoadingState {
     object Posting : LoadingState()

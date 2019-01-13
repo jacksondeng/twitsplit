@@ -4,8 +4,8 @@ import android.arch.lifecycle.Observer
 import android.os.Bundle
 import com.amazonaws.mobile.auth.ui.SignInUI
 import com.assignment.zalora.twitsplit.R
-import com.assignment.zalora.twitsplit.util.AWSInstanceState
-import com.assignment.zalora.twitsplit.util.AWSProvider
+import com.assignment.zalora.twitsplit.util.aws.AWSInstanceState
+import com.assignment.zalora.twitsplit.util.aws.AWSProvider
 import dagger.android.AndroidInjection
 import dagger.android.support.DaggerAppCompatActivity
 
@@ -24,11 +24,11 @@ class AuthActivity : DaggerAppCompatActivity() {
         setContentView(R.layout.activity_auth)
         setSupportActionBar(toolbar)
         observeInstanceState()
-        awsProvider.instanceState?.postValue(AWSInstanceState.Initialized)
+        awsProvider.instanceState.postValue(AWSInstanceState.Initialized)
     }
 
     fun observeInstanceState(){
-        awsProvider.instanceState?.observe(this, Observer {
+        awsProvider.instanceState.observe(this, Observer {
                 instanceState ->
                 Timber.d("instanceState $instanceState")
                 when(instanceState){

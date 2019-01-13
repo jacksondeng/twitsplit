@@ -1,4 +1,4 @@
-package com.assignment.zalora.twitsplit.util
+package com.assignment.zalora.twitsplit.util.aws
 
 sealed class AWSInstanceState {
     object Initialized : AWSInstanceState()

@@ -8,9 +8,8 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBQueryExp
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedQueryList
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient
 import com.assignment.zalora.twitsplit.model.TweetsDO
-import com.assignment.zalora.twitsplit.util.AWSProvider
-import com.assignment.zalora.twitsplit.util.LoadingState
-import timber.log.Timber
+import com.assignment.zalora.twitsplit.util.aws.AWSProvider
+import com.assignment.zalora.twitsplit.util.state.LoadingState
 import javax.inject.Singleton
 import kotlin.concurrent.thread
 
@@ -18,6 +17,7 @@ import kotlin.concurrent.thread
 class DynamoDbUtils(private var awsProvider: AWSProvider){
     private var dynamoDBMapper: DynamoDBMapper ? = null
     var loadingState : MutableLiveData<LoadingState> = MutableLiveData()
+    var tweetList : MutableLiveData<PaginatedQueryList<TweetsDO>> = MutableLiveData()
 
     fun createTweet(msg : String,index: Int) : TweetsDO {
         val tweet = TweetsDO()
@@ -33,7 +33,7 @@ class DynamoDbUtils(private var awsProvider: AWSProvider){
             return
         }
 
-        if(awsProvider!!.identityManager.isUserSignedIn && dynamoDBMapper == null){
+        if(awsProvider.identityManager.isUserSignedIn && dynamoDBMapper == null){
             initDbClient()
         }
 
@@ -46,25 +46,25 @@ class DynamoDbUtils(private var awsProvider: AWSProvider){
             loadingState.postValue(LoadingState.Loading)
         }
         // Wait 200ms before reading tweets
-        Handler().postDelayed({ readTweet() },200)
+        Handler().postDelayed({ loadTweets() },200)
     }
 
-    fun readTweet() : PaginatedQueryList<TweetsDO>?{
+    fun loadTweets(){
 
         if(awsProvider.identityManager.isUserSignedIn && dynamoDBMapper == null){
             initDbClient()
         }
         var paginatedQueryList : PaginatedQueryList<TweetsDO> ?= null
         thread(start = true) {
-            paginatedQueryList = dynamoDBMapper?.query(TweetsDO::class.java,createQueryExpression(10))
+            paginatedQueryList = dynamoDBMapper?.query(TweetsDO::class.java,createQueryExpression(30))
         }.join()
 
         if(paginatedQueryList==null){
             loadingState.postValue(LoadingState.Failed)
         } else{
-                loadingState.postValue(LoadingState.Success)
-          }
-        return paginatedQueryList
+            loadingState.postValue(LoadingState.Success)
+        }
+        tweetList.postValue(paginatedQueryList)
     }
 
     fun createQueryExpression(limit : Int) : DynamoDBQueryExpression<TweetsDO>{

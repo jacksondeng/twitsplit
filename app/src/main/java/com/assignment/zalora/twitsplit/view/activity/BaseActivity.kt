@@ -5,9 +5,12 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.support.v4.app.FragmentManager
 import com.assignment.zalora.twitsplit.R
-import com.assignment.zalora.twitsplit.util.LoadingState
-import com.assignment.zalora.twitsplit.util.StatusUtils
+import com.assignment.zalora.twitsplit.util.state.LoadingState
+import com.assignment.zalora.twitsplit.util.state.StatusUtils
+import com.assignment.zalora.twitsplit.view.fragment.ErrorDialogFragment
+import com.assignment.zalora.twitsplit.view.fragment.InputMsgDialogFragment
 import com.assignment.zalora.twitsplit.viewmodel.TweetVM
 import dagger.android.AndroidInjection
 import dagger.android.support.DaggerAppCompatActivity
@@ -30,7 +33,7 @@ open class BaseActivity : DaggerAppCompatActivity(), StatusUtils {
         AndroidInjection.inject(this)
         initVm()
         initObservers()
-        initDialog()
+        initLoadingDialog()
     }
 
     override fun showLoading() {
@@ -40,7 +43,7 @@ open class BaseActivity : DaggerAppCompatActivity(), StatusUtils {
     }
 
     override fun showError(err: String) {
-
+        showErrorDialog(err)
     }
 
     override fun hideLoading() {
@@ -71,20 +74,35 @@ open class BaseActivity : DaggerAppCompatActivity(), StatusUtils {
 
                 LoadingState.Failed ->{
                     Timber.d("LoadingState Failed")
-                    hideLoading()
+                    showError("sg")
                 }
 
                 LoadingState.Error ->{
                     Timber.d("LoadingState Error")
-                    showError("Input error")
+                    showError(getString(R.string.invalid_input_msg))
                 }
+
             }
         })
     }
 
-    fun initDialog(){
+    fun initLoadingDialog(){
         dialog = Dialog(this,android.R.style.Theme_Translucent_NoTitleBar_Fullscreen)
         dialog.setContentView(R.layout.progress_dialog)
+    }
+
+    fun showInputMsgDialog(){
+        var fm : FragmentManager = getSupportFragmentManager()
+        var inputMsgDialog = InputMsgDialogFragment()
+        inputMsgDialog.isCancelable = false
+        inputMsgDialog.show(fm, "fragment_dialog_input_msg")
+    }
+
+    fun showErrorDialog(errMsg : String){
+        var fm : FragmentManager = getSupportFragmentManager();
+        var errorDialog = ErrorDialogFragment.newInstance(errMsg,getString(R.string.invalid_input))
+        errorDialog.isCancelable = false
+        errorDialog.show(fm, "fragment_dialog_error");
     }
 
 }

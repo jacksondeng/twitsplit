@@ -6,15 +6,15 @@ import android.arch.lifecycle.ViewModel
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedQueryList
 import com.assignment.zalora.twitsplit.db.DynamoDbUtils
 import com.assignment.zalora.twitsplit.model.TweetsDO
-import com.assignment.zalora.twitsplit.util.AWSProvider
-import com.assignment.zalora.twitsplit.util.LoadingState
+import com.assignment.zalora.twitsplit.util.aws.AWSProvider
+import com.assignment.zalora.twitsplit.util.state.LoadingState
 import timber.log.Timber
 import javax.inject.Inject
 
 class TweetVM @Inject constructor(private val dynamoDbUtils: DynamoDbUtils, private val awsProvider: AWSProvider)
     : ViewModel(), LifecycleObserver {
 
-    var tweetList : MutableLiveData<PaginatedQueryList<TweetsDO>> = MutableLiveData()
+    var tweetList : MutableLiveData<PaginatedQueryList<TweetsDO>> = dynamoDbUtils.tweetList
     var isUserSignedIn : Boolean
     var loadingState : MutableLiveData<LoadingState> = dynamoDbUtils.loadingState
     init {
@@ -25,8 +25,8 @@ class TweetVM @Inject constructor(private val dynamoDbUtils: DynamoDbUtils, priv
         dynamoDbUtils.postTweet(msgList)
     }
 
-    fun readTweets(){
-        tweetList.postValue(dynamoDbUtils.readTweet())
+    fun loadTweets(){
+        dynamoDbUtils.loadTweets()
     }
 
     fun iterateTweets(){

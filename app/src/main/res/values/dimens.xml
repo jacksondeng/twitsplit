@@ -1,4 +1,7 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="fragment_input_msg_et_padding">10dp</dimen>
+    <dimen name="dialog_width">250dp</dimen>
+    <dimen name="dialog_height">250dp</dimen>
+    <dimen name="tweet_height">135dp</dimen>
 </resources>
