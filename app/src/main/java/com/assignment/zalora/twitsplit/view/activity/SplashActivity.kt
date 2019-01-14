@@ -48,7 +48,8 @@ class SplashActivity : AppCompatActivity() {
     }
 
     fun checkIfUserSignedIn() : Boolean{
-        return awsProvider.identityManager.isUserSignedIn
+        Timber.d("UserSignedIn ${awsProvider.isUserSignedIn} ${awsProvider.cachedUserID}")
+        return awsProvider.cachedUserID != null
     }
 
     fun gotoAuth(){

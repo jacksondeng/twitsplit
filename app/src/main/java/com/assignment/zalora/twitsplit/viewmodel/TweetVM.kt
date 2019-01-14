@@ -16,11 +16,7 @@ class TweetVM @Inject constructor(private val dynamoDbUtils: DynamoDbUtils, priv
     : ViewModel(), LifecycleObserver {
 
     var tweetList : MutableLiveData<MutableList<TweetsDO>> = dynamoDbUtils.tweetList
-    var isUserSignedIn : Boolean
     var loadingState : MutableLiveData<LoadingState> = dynamoDbUtils.loadingState
-    init {
-        this.isUserSignedIn = awsProvider.identityManager.isUserSignedIn
-    }
 
     fun postTweet(msgList : List<String>){
         dynamoDbUtils.postTweet(msgList)
@@ -32,6 +28,14 @@ class TweetVM @Inject constructor(private val dynamoDbUtils: DynamoDbUtils, priv
 
     fun deleteTweets(tweetsDO: TweetsDO){
         dynamoDbUtils.deleteTweet(tweetsDO)
+    }
+
+    fun getTweetAt(position : Int) : TweetsDO?{
+        return tweetList.value?.get(position)
+    }
+
+    fun setTweetList(tweetList : MutableList<TweetsDO>){
+        tweetAdapter.setTweetList(tweetList)
     }
 
 }

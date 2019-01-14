@@ -34,7 +34,7 @@ class AuthActivity : DaggerAppCompatActivity() {
             .canCancel(true)
             .build()
         ui.login(this, MainActivity::class.java).authUIConfiguration(config).execute()
-        finish()
+        //finish()
     }
 
 }

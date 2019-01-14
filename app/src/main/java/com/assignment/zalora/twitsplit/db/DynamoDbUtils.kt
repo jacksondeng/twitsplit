@@ -12,6 +12,7 @@ import com.assignment.zalora.twitsplit.util.aws.AWSProvider
 import com.assignment.zalora.twitsplit.util.network.NetworkManager
 import com.assignment.zalora.twitsplit.util.state.ErrorCode
 import com.assignment.zalora.twitsplit.util.state.LoadingState
+import timber.log.Timber
 import javax.inject.Singleton
 import kotlin.concurrent.thread
 
@@ -24,7 +25,7 @@ class DynamoDbUtils(private var awsProvider: AWSProvider,private var networkMana
 
     fun createTweet(msg : String,index: Int) : TweetsDO {
             val tweet = TweetsDO()
-            tweet.userId = awsProvider.identityManager.cachedUserID
+            tweet.userId = awsProvider.cachedUserID!!
             tweet.msg = msg
             tweet.creationDate = getCurrentTimeStamp(index)
             return tweet
@@ -71,6 +72,7 @@ class DynamoDbUtils(private var awsProvider: AWSProvider,private var networkMana
     }
 
     fun loadTweets(){
+        Timber.d("loadTweets " + isConnectedToNetwork() + " " + checkCachedUserId())
         if(isConnectedToNetwork() && checkCachedUserId()) {
             initDbClient()
             var paginatedQueryList: PaginatedQueryList<TweetsDO>? = null
@@ -93,7 +95,7 @@ class DynamoDbUtils(private var awsProvider: AWSProvider,private var networkMana
         val queryExpression = DynamoDBQueryExpression<TweetsDO>()
         if(isConnectedToNetwork() && checkCachedUserId()) {
             val tweet = TweetsDO()
-            tweet.userId = awsProvider.identityManager.cachedUserID
+            tweet.userId = awsProvider.cachedUserID!!
             queryExpression
                 .withHashKeyValues(tweet)
                 .withLimit(limit)
@@ -104,7 +106,7 @@ class DynamoDbUtils(private var awsProvider: AWSProvider,private var networkMana
     fun initDbClient(){
         if(awsProvider.identityManager.isUserSignedIn && dynamoDBMapper == null) {
 
-            val client = AmazonDynamoDBClient(awsProvider.identityManager.credentialsProvider)
+            val client = AmazonDynamoDBClient(awsProvider.credentialsProvider)
             dynamoDBMapper = DynamoDBMapper.builder()
                 .dynamoDBClient(client)
                 .awsConfiguration(AWSMobileClient.getInstance().configuration)
@@ -133,6 +135,7 @@ class DynamoDbUtils(private var awsProvider: AWSProvider,private var networkMana
     }
 
     fun checkCachedUserId() : Boolean{
-        return awsProvider.identityManager.cachedUserID != null
+        Timber.d("UserSignedIn ${awsProvider.isUserSignedIn} ${awsProvider.cachedUserID}")
+        return awsProvider.cachedUserID != null
     }
 }

@@ -70,7 +70,7 @@ class MainActivity : BaseActivity(), OnDataPass {
     }
 
     private fun updatelist(){
-        tweetVM.tweetAdapter.setTweetList(tweetVM.tweetList.value!!)
+        tweetVM.setTweetList(tweetVM.tweetList.value!!)
         swipe_container.isRefreshing = false
     }
 }
