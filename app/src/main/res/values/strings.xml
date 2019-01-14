@@ -10,4 +10,6 @@
         characters and must not be empty
     </string>
     <string name="title_activity_splash">SplashActivity</string>
+    <string name="network_err">Network error</string>
+    <string name="network_err_msg">Please ensure you have internet connection.</string>
 </resources>

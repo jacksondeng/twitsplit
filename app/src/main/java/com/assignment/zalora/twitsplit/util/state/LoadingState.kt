@@ -6,5 +6,5 @@ sealed class LoadingState {
     object Loading : LoadingState()
     object Success : LoadingState()
     object Failed : LoadingState()
-    object Error : LoadingState()
+    data class Error(val errorCode: ErrorCode) : LoadingState()
 }

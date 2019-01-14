@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.assignment.zalora.twitsplit.db.DynamoDbUtils
 import com.assignment.zalora.twitsplit.util.aws.AWSProvider
+import com.assignment.zalora.twitsplit.util.network.NetworkManager
 import dagger.Module
 
 
@@ -25,7 +26,7 @@ class DataModule {
 
     @Provides
     @Singleton
-    fun provideDynamoDbUtils(awsProvider: AWSProvider) : DynamoDbUtils{
-        return DynamoDbUtils(awsProvider)
+    fun provideDynamoDbUtils(awsProvider: AWSProvider,networkManager: NetworkManager) : DynamoDbUtils{
+        return DynamoDbUtils(awsProvider,networkManager)
     }
 }

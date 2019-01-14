@@ -3,21 +3,22 @@ package com.assignment.zalora.twitsplit.viewmodel
 import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedQueryList
 import com.assignment.zalora.twitsplit.db.DynamoDbUtils
 import com.assignment.zalora.twitsplit.model.TweetsDO
 import com.assignment.zalora.twitsplit.util.aws.AWSProvider
+import com.assignment.zalora.twitsplit.util.network.NetworkManager
 import com.assignment.zalora.twitsplit.util.state.LoadingState
 import javax.inject.Inject
 
-class TweetVM @Inject constructor(private val dynamoDbUtils: DynamoDbUtils, private val awsProvider: AWSProvider)
+class TweetVM @Inject constructor(private val dynamoDbUtils: DynamoDbUtils, private val awsProvider: AWSProvider
+                                  ,private val networkStateReceiver: NetworkManager)
     : ViewModel(), LifecycleObserver {
 
     var tweetList : MutableLiveData<MutableList<TweetsDO>> = dynamoDbUtils.tweetList
     var isUserSignedIn : Boolean
     var loadingState : MutableLiveData<LoadingState> = dynamoDbUtils.loadingState
     init {
-        this.isUserSignedIn = awsProvider.identityManager.isUserSignedIn()
+        this.isUserSignedIn = awsProvider.identityManager.isUserSignedIn
     }
 
     fun postTweet(msgList : List<String>){

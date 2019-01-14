@@ -9,84 +9,102 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedQueryLi
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient
 import com.assignment.zalora.twitsplit.model.TweetsDO
 import com.assignment.zalora.twitsplit.util.aws.AWSProvider
+import com.assignment.zalora.twitsplit.util.network.NetworkManager
+import com.assignment.zalora.twitsplit.util.state.ErrorCode
 import com.assignment.zalora.twitsplit.util.state.LoadingState
 import javax.inject.Singleton
 import kotlin.concurrent.thread
 
 @Singleton
-class DynamoDbUtils(private var awsProvider: AWSProvider){
+class DynamoDbUtils(private var awsProvider: AWSProvider,private var networkManager: NetworkManager){
+
     private var dynamoDBMapper: DynamoDBMapper ? = null
     var loadingState : MutableLiveData<LoadingState> = MutableLiveData()
     var tweetList : MutableLiveData<MutableList<TweetsDO>> = MutableLiveData()
 
     fun createTweet(msg : String,index: Int) : TweetsDO {
-        val tweet = TweetsDO()
-        tweet.userId = awsProvider!!.identityManager?.cachedUserID
-        tweet.msg = msg
-        tweet.creationDate = getCurrentTimeStamp(index)
-        return tweet
+            val tweet = TweetsDO()
+            tweet.userId = awsProvider.identityManager.cachedUserID
+            tweet.msg = msg
+            tweet.creationDate = getCurrentTimeStamp(index)
+            return tweet
+
     }
 
     fun postTweet(msgList : List<String>){
-        if(msgList.size == 0){
-            loadingState.postValue(LoadingState.Error)
-            return
+        if(isConnectedToNetwork()) {
+            if (msgList.size == 0) {
+                loadingState.postValue(LoadingState.Error(ErrorCode.InputError))
+                return
+            }
+
+            initDbClient()
+
+            loadingState.postValue(LoadingState.Posting)
+            for (index in msgList.indices) {
+                thread(start = true) {
+                    dynamoDBMapper?.save(createTweet(msgList.get(index), index))
+                }.join()
+
+                loadingState.postValue(LoadingState.Loading)
+            }
+            // Wait 200ms before loading tweets
+            Handler().postDelayed({ loadTweets() }, 200)
+        } else{
+            loadingState.postValue(LoadingState.Error(ErrorCode.NetworkError))
         }
-
-        initDbClient()
-
-        loadingState.postValue(LoadingState.Posting)
-        for(index in msgList.indices) {
-            thread(start = true) {
-                dynamoDBMapper?.save(createTweet(msgList.get(index), index))
-            }.join()
-
-            loadingState.postValue(LoadingState.Loading)
-        }
-        // Wait 200ms before loading tweets
-        Handler().postDelayed({ loadTweets() },200)
     }
 
     fun deleteTweet(tweetsDO: TweetsDO){
-        initDbClient()
-        loadingState.postValue(LoadingState.Deleting)
-        thread(start = true) {
-            dynamoDBMapper?.delete(tweetsDO)
-        }.join()
-        loadingState.postValue(LoadingState.Loading)
-        // Wait 200ms before loading tweets
-        Handler().postDelayed({ loadTweets() },200)
+        if(isConnectedToNetwork()) {
+            initDbClient()
+            loadingState.postValue(LoadingState.Deleting)
+            thread(start = true) {
+                dynamoDBMapper?.delete(tweetsDO)
+            }.join()
+            loadingState.postValue(LoadingState.Loading)
+            // Wait 200ms before loading tweets
+            Handler().postDelayed({ loadTweets() }, 200)
+        } else{
+            loadingState.postValue(LoadingState.Error(ErrorCode.NetworkError))
+        }
     }
 
     fun loadTweets(){
-        initDbClient()
-        var paginatedQueryList : PaginatedQueryList<TweetsDO> ?= null
-        thread(start = true) {
-            paginatedQueryList = dynamoDBMapper?.query(TweetsDO::class.java,createQueryExpression(10))
-        }.join()
+        if(isConnectedToNetwork()) {
+            initDbClient()
+            var paginatedQueryList: PaginatedQueryList<TweetsDO>? = null
+            thread(start = true) {
+                paginatedQueryList = dynamoDBMapper?.query(TweetsDO::class.java, createQueryExpression(10))
+            }.join()
 
-        if(paginatedQueryList==null){
-            loadingState.postValue(LoadingState.Failed)
+            if (paginatedQueryList == null) {
+                loadingState.postValue(LoadingState.Failed)
+            } else {
+                loadingState.postValue(LoadingState.Success)
+            }
+            tweetList.postValue(convertPaginatedListToList(paginatedQueryList))
         } else{
-            loadingState.postValue(LoadingState.Success)
+            loadingState.postValue(LoadingState.Error(ErrorCode.NetworkError))
         }
-        tweetList.postValue(convertPaginatedListToList(paginatedQueryList))
     }
 
     fun createQueryExpression(limit : Int) : DynamoDBQueryExpression<TweetsDO>{
         val queryExpression = DynamoDBQueryExpression<TweetsDO>()
-        val tweet = TweetsDO()
-        tweet.userId = awsProvider.identityManager.cachedUserID
-        queryExpression
-            .withHashKeyValues(tweet)
-            .withLimit(limit)
+        if(isConnectedToNetwork()) {
+            val tweet = TweetsDO()
+            tweet.userId = awsProvider.identityManager.cachedUserID
+            queryExpression
+                .withHashKeyValues(tweet)
+                .withLimit(limit)
+        }
         return queryExpression
     }
 
     fun initDbClient(){
         if(awsProvider.identityManager.isUserSignedIn && dynamoDBMapper == null) {
 
-            val client = AmazonDynamoDBClient(awsProvider!!.identityManager.credentialsProvider)
+            val client = AmazonDynamoDBClient(awsProvider.identityManager.credentialsProvider)
             dynamoDBMapper = DynamoDBMapper.builder()
                 .dynamoDBClient(client)
                 .awsConfiguration(AWSMobileClient.getInstance().configuration)
@@ -108,5 +126,9 @@ class DynamoDbUtils(private var awsProvider: AWSProvider){
             }
         }.join()
         return list
+    }
+
+    fun isConnectedToNetwork() : Boolean{
+        return networkManager.isOnline()
     }
 }

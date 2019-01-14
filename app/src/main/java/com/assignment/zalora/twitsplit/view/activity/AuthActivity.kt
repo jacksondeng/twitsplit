@@ -1,18 +1,14 @@
 package com.assignment.zalora.twitsplit.view.activity
 
-import android.arch.lifecycle.Observer
 import android.graphics.Color
 import android.os.Bundle
 import com.amazonaws.mobile.auth.ui.AuthUIConfiguration
 import com.amazonaws.mobile.auth.ui.SignInUI
 import com.assignment.zalora.twitsplit.R
-import com.assignment.zalora.twitsplit.util.aws.AWSInstanceState
 import com.assignment.zalora.twitsplit.util.aws.AWSProvider
 import dagger.android.AndroidInjection
 import dagger.android.support.DaggerAppCompatActivity
 
-import kotlinx.android.synthetic.main.activity_auth.*
-import timber.log.Timber
 import javax.inject.Inject
 
 class AuthActivity : DaggerAppCompatActivity() {
@@ -38,5 +34,7 @@ class AuthActivity : DaggerAppCompatActivity() {
             .canCancel(true)
             .build()
         ui.login(this, MainActivity::class.java).authUIConfiguration(config).execute()
+        finish()
     }
+
 }

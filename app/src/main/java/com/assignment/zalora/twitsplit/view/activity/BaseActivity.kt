@@ -7,6 +7,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.FragmentManager
 import com.assignment.zalora.twitsplit.R
+import com.assignment.zalora.twitsplit.util.state.ErrorCode
 import com.assignment.zalora.twitsplit.util.state.LoadingState
 import com.assignment.zalora.twitsplit.util.state.StatusUtils
 import com.assignment.zalora.twitsplit.view.fragment.ErrorDialogFragment
@@ -42,8 +43,8 @@ open class BaseActivity : DaggerAppCompatActivity(), StatusUtils {
         }
     }
 
-    override fun showError(err: String) {
-        showErrorDialog(err)
+    override fun showError(err: String,title: String) {
+        showErrorDialog(err,title)
     }
 
     override fun hideLoading() {
@@ -72,9 +73,14 @@ open class BaseActivity : DaggerAppCompatActivity(), StatusUtils {
                     hideLoading()
                 }
 
-                LoadingState.Error ->{
-                    Timber.d("LoadingState Error")
-                    showError(getString(R.string.invalid_input_msg))
+                LoadingState.Error(ErrorCode.InputError) ->{
+                    Timber.d("LoadingState Input Error")
+                    showError(getString(R.string.invalid_input_msg),getString(R.string.invalid_input))
+                }
+
+                LoadingState.Error(ErrorCode.NetworkError) ->{
+                    Timber.d("LoadingState Network Error")
+                    showError(getString(R.string.network_err_msg),getString(R.string.network_err))
                 }
 
             }
@@ -93,9 +99,9 @@ open class BaseActivity : DaggerAppCompatActivity(), StatusUtils {
         inputMsgDialog.show(fm, "fragment_dialog_input_msg")
     }
 
-    fun showErrorDialog(errMsg : String){
+    fun showErrorDialog(errMsg : String,title:String){
         var fm : FragmentManager = getSupportFragmentManager();
-        var errorDialog = ErrorDialogFragment.newInstance(errMsg,getString(R.string.invalid_input))
+        var errorDialog = ErrorDialogFragment.newInstance(errMsg,title)
         errorDialog.isCancelable = false
         errorDialog.show(fm, "fragment_dialog_error");
     }

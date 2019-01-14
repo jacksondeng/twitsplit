@@ -12,9 +12,13 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import com.assignment.zalora.twitsplit.R
+import com.assignment.zalora.twitsplit.util.dialogFragment.OnDataPass
 import timber.log.Timber
 
 class ErrorDialogFragment : DialogFragment() {
+    // Interface to pass msg back to activity on fragment dismissal
+    var dataPasser : OnDataPass?= null
+
     var errorMsgTv : TextView ?= null
     var btnDismiss : ImageButton ?= null
     var errorMsg : String ?= null
@@ -33,6 +37,7 @@ class ErrorDialogFragment : DialogFragment() {
         arguments?.getString("errMsg")?.let {
             errorMsg = it
         }
+        dataPasser = context as OnDataPass
     }
 
 
@@ -47,10 +52,6 @@ class ErrorDialogFragment : DialogFragment() {
         builder.setTitle(title).setNeutralButton(activity!!.getString(R.string.dismiss), null)
         builder.setMessage(errorMsg)
         return builder.create()
-    }
-
-    override fun onDismiss(dialog: DialogInterface?) {
-        super.onDismiss(dialog)
     }
 
     fun initViews(view : View){
@@ -74,4 +75,17 @@ class ErrorDialogFragment : DialogFragment() {
             return frag
         }
     }
+
+    // Pass msg back to activity on fragment dismissal
+    fun passData(data: Boolean) {
+        dataPasser?.onDataPass(data)
+    }
+
+    override fun onDismiss(dialog: DialogInterface?) {
+        super.onDismiss(dialog)
+        passData(false)
+    }
+
+
+
 }

@@ -20,6 +20,7 @@ import android.support.v7.widget.helper.ItemTouchHelper
 
 
 class MainActivity : BaseActivity(), OnDataPass {
+
     private var msgUtils = MessageUtils()
     private var tweetAdapter : TweetAdapter ?= null
 
@@ -35,6 +36,11 @@ class MainActivity : BaseActivity(), OnDataPass {
         tweetVM.postTweet(msgUtils.split(msg))
     }
 
+    override fun onDataPass(refreshing: Boolean) {
+        swipe_container?.isRefreshing = refreshing
+    }
+
+
     override fun onResume() {
         super.onResume()
         loadTweets()
@@ -48,10 +54,8 @@ class MainActivity : BaseActivity(), OnDataPass {
         tweetVM.tweetList.observe(this, Observer {
             when(it){
                 null -> {
-                    Timber.d("TweetList null")
                 }
                 else ->{
-                    Timber.d("TweetList " + it.size)
                     initAdapter()
                 }
             }
