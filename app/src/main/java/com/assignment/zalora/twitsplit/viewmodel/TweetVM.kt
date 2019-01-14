@@ -3,6 +3,7 @@ package com.assignment.zalora.twitsplit.viewmodel
 import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import com.assignment.zalora.twitsplit.adapter.TweetAdapter
 import com.assignment.zalora.twitsplit.db.DynamoDbUtils
 import com.assignment.zalora.twitsplit.model.TweetsDO
 import com.assignment.zalora.twitsplit.util.aws.AWSProvider
@@ -11,7 +12,7 @@ import com.assignment.zalora.twitsplit.util.state.LoadingState
 import javax.inject.Inject
 
 class TweetVM @Inject constructor(private val dynamoDbUtils: DynamoDbUtils, private val awsProvider: AWSProvider
-                                  ,private val networkStateReceiver: NetworkManager)
+                                  ,val tweetAdapter: TweetAdapter)
     : ViewModel(), LifecycleObserver {
 
     var tweetList : MutableLiveData<MutableList<TweetsDO>> = dynamoDbUtils.tweetList
@@ -32,4 +33,5 @@ class TweetVM @Inject constructor(private val dynamoDbUtils: DynamoDbUtils, priv
     fun deleteTweets(tweetsDO: TweetsDO){
         dynamoDbUtils.deleteTweet(tweetsDO)
     }
+
 }

@@ -7,19 +7,26 @@ import android.view.View
 import android.view.ViewGroup
 import com.assignment.zalora.twitsplit.R
 import com.assignment.zalora.twitsplit.model.TweetsDO
-import com.assignment.zalora.twitsplit.viewmodel.TweetVM
 import kotlinx.android.synthetic.main.tweet_item.view.*
 import org.joda.time.DateTime
+import javax.inject.Inject
 
 
-class TweetAdapter(var tweets : MutableList<TweetsDO>,val context: Context, val tweetVM: TweetVM): RecyclerView.Adapter<TweetAdapter.ViewHolder>(){
+class TweetAdapter @Inject constructor(): RecyclerView.Adapter<TweetAdapter.ViewHolder>(){
+
+    var tweets : MutableList<TweetsDO> ?= null
 
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): TweetAdapter.ViewHolder {
-        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.tweet_item, parent, false))
+        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.tweet_item, parent, false))
     }
 
     override fun getItemCount(): Int {
-        return tweets.size
+        if(tweets != null){
+            return tweets!!.size
+        }
+        else{
+            return 0
+        }
     }
 
     class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
@@ -28,8 +35,10 @@ class TweetAdapter(var tweets : MutableList<TweetsDO>,val context: Context, val 
     }
 
     override fun onBindViewHolder(viewHolder: TweetAdapter.ViewHolder, pos: Int) {
-        viewHolder.tweet?.text = tweets.get(pos).msg
-        viewHolder.datePosted?.text = getDateTimeFromLong(tweets.get(pos).creationDate.toLong())
+        if(tweets != null) {
+            viewHolder.tweet.text = tweets!!.get(pos).msg
+            viewHolder.datePosted.text = getDateTimeFromLong(tweets!!.get(pos).creationDate.toLong())
+        }
     }
 
 
@@ -44,8 +53,7 @@ class TweetAdapter(var tweets : MutableList<TweetsDO>,val context: Context, val 
     }
 
     fun removeAt(position: Int) {
-        tweetVM.deleteTweets(tweets.get(position))
-        tweets.removeAt(position)
+        tweets?.removeAt(position)
         notifyItemRemoved(position)
     }
 }

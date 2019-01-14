@@ -4,9 +4,9 @@
     <dimen name="text_size_normal">10sp</dimen>
     <dimen name="text_size_large">14sp</dimen>
     <dimen name="fragment_input_msg_et_padding">10dp</dimen>
-    <dimen name="dialog_width">250dp</dimen>
-    <dimen name="dialog_height">250dp</dimen>
-    <dimen name="tweet_height">135dp</dimen>
-    <dimen name="tweet_button_width">55dp</dimen>
-    <dimen name="tweet_button_height">30dp</dimen>
+    <dimen name="dialog_width">220dp</dimen>
+    <dimen name="dialog_height">200dp</dimen>
+    <dimen name="tweet_height">115dp</dimen>
+    <dimen name="tweet_button_width">40dp</dimen>
+    <dimen name="tweet_button_height">25dp</dimen>
 </resources>

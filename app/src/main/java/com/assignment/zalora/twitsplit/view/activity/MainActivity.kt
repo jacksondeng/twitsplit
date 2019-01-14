@@ -1,34 +1,26 @@
 package com.assignment.zalora.twitsplit.view.activity
 
 import android.arch.lifecycle.Observer
-import android.content.Intent
-import android.graphics.drawable.ClipDrawable.HORIZONTAL
+import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
 import com.assignment.zalora.twitsplit.R
-import com.assignment.zalora.twitsplit.adapter.TweetAdapter
 import com.assignment.zalora.twitsplit.util.MessageUtils
 import com.assignment.zalora.twitsplit.util.dialogFragment.OnDataPass
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.content_main.*
-import timber.log.Timber
-import android.support.v7.widget.DividerItemDecoration
 import com.assignment.zalora.twitsplit.util.adapter.SwipeToDeleteCallback
 import android.support.v7.widget.helper.ItemTouchHelper
-
-
-
+import com.assignment.zalora.twitsplit.databinding.ActivityMainBinding
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity(), OnDataPass {
 
     private var msgUtils = MessageUtils()
-    private var tweetAdapter : TweetAdapter ?= null
+    private lateinit var mainBinding : ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
+        initBindings()
         initListeners()
+        initAdapter()
         initTweetListObserver()
     }
 
@@ -37,7 +29,7 @@ class MainActivity : BaseActivity(), OnDataPass {
     }
 
     override fun onDataPass(refreshing: Boolean) {
-        swipe_container?.isRefreshing = refreshing
+        swipe_container.isRefreshing = refreshing
     }
 
 
@@ -46,41 +38,40 @@ class MainActivity : BaseActivity(), OnDataPass {
         loadTweets()
     }
 
-    fun loadTweets(){
+    private fun loadTweets(){
         tweetVM.loadTweets()
     }
 
-    fun initTweetListObserver(){
+    private fun initTweetListObserver(){
         tweetVM.tweetList.observe(this, Observer {
             when(it){
                 null -> {
                 }
                 else ->{
-                    initAdapter()
+                    updatelist()
                 }
             }
         })
     }
 
-    fun initListeners(){
-        fab.setOnClickListener { showInputMsgDialog() }
+    private fun initBindings(){
+        mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        mainBinding.tweetVM = tweetVM
+    }
+
+    private fun initListeners(){
+        post_cl.setOnClickListener { showInputMsgDialog() }
         swipe_container.setOnRefreshListener{ loadTweets() }
     }
 
-    fun initAdapter(){
-        if(tweetAdapter == null) {
-            tweetAdapter = TweetAdapter(tweetVM.tweetList.value!!, this,tweetVM)
-        }else{
-            tweetAdapter?.setTweetList(tweetVM.tweetList.value!!)
-        }
-        val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback(tweetAdapter!!))
+    private fun initAdapter(){
+        val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback(tweetVM))
         itemTouchHelper.attachToRecyclerView(tweet_list)
-        tweet_list.adapter = tweetAdapter
-        tweet_list.setLayoutManager(LinearLayoutManager(this))
-        tweet_list.addItemDecoration(DividerItemDecoration(this, HORIZONTAL))
-        swipe_container.isRefreshing = false
     }
 
-
+    private fun updatelist(){
+        tweetVM.tweetAdapter.setTweetList(tweetVM.tweetList.value!!)
+        swipe_container.isRefreshing = false
+    }
 }
 

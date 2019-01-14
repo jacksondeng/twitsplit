@@ -22,5 +22,9 @@
         <item name="android:windowAnimationStyle">@null</item>
         <item name="android:windowBackground">@drawable/splash_screen</item>
     </style>
+    
+    <style name="DialogSlide">
+        <item name="android:windowEnterAnimation">@anim/slide_bottom_up</item>
+    </style>
 
 </resources>

@@ -11,6 +11,9 @@ import android.view.WindowManager
 import android.widget.EditText
 import com.assignment.zalora.twitsplit.R
 import android.content.DialogInterface
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.widget.Button
 import android.widget.ImageButton
 import com.assignment.zalora.twitsplit.util.dialogFragment.OnDataPass
 
@@ -18,7 +21,9 @@ class InputMsgDialogFragment : DialogFragment() {
     // Interface to pass msg back to activity on fragment dismissal
     var dataPasser : OnDataPass?= null
     var msgEt : EditText ?= null
-    var btnTweet : ImageButton?= null
+    var btnTweet : Button?= null
+    var btnCancel : ImageButton ?= null
+    var canceledByUser : Boolean = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
@@ -38,12 +43,14 @@ class InputMsgDialogFragment : DialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        initDialogSize(dialog)
+        initDialog(dialog)
     }
 
     override fun onDismiss(dialog: DialogInterface?) {
         super.onDismiss(dialog)
-        passData(msgEt?.text.toString())
+        if(!canceledByUser){
+            passData(msgEt?.text.toString())
+        }
     }
 
     // Pass msg back to activity on fragment dismissal
@@ -55,16 +62,24 @@ class InputMsgDialogFragment : DialogFragment() {
         msgEt = view.findViewById(R.id.input_msg_et)
         msgEt?.requestFocus();
         btnTweet = view.findViewById(R.id.btn_tweet)
+        btnCancel = view.findViewById(R.id.btn_cancel)
     }
 
-    fun initDialogSize(dialog : Dialog){
+    fun initDialog(dialog : Dialog){
         val width = WindowManager.LayoutParams.MATCH_PARENT
-        val height = WindowManager.LayoutParams.WRAP_CONTENT
+        val height = WindowManager.LayoutParams.MATCH_PARENT
         dialog.window?.setLayout(width, height)
+        dialog.window?.attributes?.windowAnimations = R.style.DialogSlide
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.WHITE))
     }
+
 
     fun initListeners(){
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         btnTweet?.setOnClickListener { this.dismiss()}
+        btnCancel?.setOnClickListener{
+            canceledByUser = true
+            this.dismiss()
+        }
     }
 }

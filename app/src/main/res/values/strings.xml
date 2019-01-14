@@ -12,4 +12,5 @@
     <string name="title_activity_splash">SplashActivity</string>
     <string name="network_err">Network error</string>
     <string name="network_err_msg">Please ensure you have internet connection.</string>
+    <string name="whats_on_your_mind">What\'s on your mind?</string>
 </resources>

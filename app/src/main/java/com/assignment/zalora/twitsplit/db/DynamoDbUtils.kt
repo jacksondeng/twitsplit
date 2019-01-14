@@ -32,7 +32,7 @@ class DynamoDbUtils(private var awsProvider: AWSProvider,private var networkMana
     }
 
     fun postTweet(msgList : List<String>){
-        if(isConnectedToNetwork()) {
+        if(isConnectedToNetwork() && checkCachedUserId()) {
             if (msgList.size == 0) {
                 loadingState.postValue(LoadingState.Error(ErrorCode.InputError))
                 return
@@ -56,7 +56,7 @@ class DynamoDbUtils(private var awsProvider: AWSProvider,private var networkMana
     }
 
     fun deleteTweet(tweetsDO: TweetsDO){
-        if(isConnectedToNetwork()) {
+        if(isConnectedToNetwork() && checkCachedUserId()) {
             initDbClient()
             loadingState.postValue(LoadingState.Deleting)
             thread(start = true) {
@@ -71,7 +71,7 @@ class DynamoDbUtils(private var awsProvider: AWSProvider,private var networkMana
     }
 
     fun loadTweets(){
-        if(isConnectedToNetwork()) {
+        if(isConnectedToNetwork() && checkCachedUserId()) {
             initDbClient()
             var paginatedQueryList: PaginatedQueryList<TweetsDO>? = null
             thread(start = true) {
@@ -91,7 +91,7 @@ class DynamoDbUtils(private var awsProvider: AWSProvider,private var networkMana
 
     fun createQueryExpression(limit : Int) : DynamoDBQueryExpression<TweetsDO>{
         val queryExpression = DynamoDBQueryExpression<TweetsDO>()
-        if(isConnectedToNetwork()) {
+        if(isConnectedToNetwork() && checkCachedUserId()) {
             val tweet = TweetsDO()
             tweet.userId = awsProvider.identityManager.cachedUserID
             queryExpression
@@ -130,5 +130,9 @@ class DynamoDbUtils(private var awsProvider: AWSProvider,private var networkMana
 
     fun isConnectedToNetwork() : Boolean{
         return networkManager.isOnline()
+    }
+
+    fun checkCachedUserId() : Boolean{
+        return awsProvider.identityManager.cachedUserID != null
     }
 }
