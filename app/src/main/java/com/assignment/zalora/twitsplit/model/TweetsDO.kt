@@ -7,9 +7,10 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBIndexHas
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBIndexRangeKey
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBRangeKey
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable
+import java.io.Serializable
 
 @DynamoDBTable(tableName = "assignment-mobilehub-88096205-Tweets")
-class TweetsDO(){
+class TweetsDO() :Serializable{
     @get:DynamoDBHashKey(attributeName = "userId")
     @get:DynamoDBAttribute(attributeName = "userId")
     var userId: String = ""

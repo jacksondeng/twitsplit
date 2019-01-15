@@ -10,9 +10,12 @@ import com.assignment.zalora.twitsplit.util.dialogFragment.OnDataPass
 import com.assignment.zalora.twitsplit.util.adapter.SwipeToDeleteCallback
 import android.support.v7.widget.helper.ItemTouchHelper
 import com.assignment.zalora.twitsplit.databinding.ActivityMainBinding
+import com.assignment.zalora.twitsplit.model.TweetsDO
+import com.assignment.zalora.twitsplit.util.adapter.OnItemClickedCallback
 import kotlinx.android.synthetic.main.activity_main.*
+import timber.log.Timber
 
-class MainActivity : BaseActivity(), OnDataPass {
+class MainActivity : BaseActivity(), OnDataPass,OnItemClickedCallback {
 
     private var msgUtils = MessageUtils()
     private lateinit var mainBinding : ActivityMainBinding
@@ -76,7 +79,7 @@ class MainActivity : BaseActivity(), OnDataPass {
     private fun initListeners(){
         postCl.setOnClickListener { showInputMsgDialog() }
         swipeContainer.setOnRefreshListener{ loadTweets() }
-        btnLogout.setOnClickListener{ tweetVM.logout() }
+        btnLogout.setOnClickListener{ tweetVM.signOut() }
     }
 
     private fun initAdapter(){
@@ -88,5 +91,13 @@ class MainActivity : BaseActivity(), OnDataPass {
         tweetVM.setTweetList(tweetVM.tweetList.value!!)
         swipeContainer.isRefreshing = false
     }
+
+    override fun gotoTweetDetails(tweetsDO: TweetsDO) {
+        tweetVM.selectedTweet = tweetsDO
+        val intent = Intent(this, TweetDetailsActivity::class.java)
+        intent.putExtra("selectedTweet",tweetVM.selectedTweet)
+        startActivity(intent)
+    }
+
 }
 

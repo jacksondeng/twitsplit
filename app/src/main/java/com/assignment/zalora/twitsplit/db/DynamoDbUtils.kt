@@ -9,6 +9,7 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedQueryLi
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient
 import com.assignment.zalora.twitsplit.model.TweetsDO
 import com.assignment.zalora.twitsplit.util.aws.AWSProvider
+import com.assignment.zalora.twitsplit.util.extension.SingleLiveEvent
 import com.assignment.zalora.twitsplit.util.network.NetworkManager
 import com.assignment.zalora.twitsplit.util.state.ErrorCode
 import com.assignment.zalora.twitsplit.util.state.LoadingState
@@ -19,8 +20,8 @@ import kotlin.concurrent.thread
 @Singleton
 class DynamoDbUtils(private var awsProvider: AWSProvider,private var networkManager: NetworkManager){
 
-    private var dynamoDBMapper: DynamoDBMapper ? = null
-    var loadingState : MutableLiveData<LoadingState> = MutableLiveData()
+    var dynamoDBMapper: DynamoDBMapper ? = null
+    var loadingState : SingleLiveEvent<LoadingState> = SingleLiveEvent()
     var tweetList : MutableLiveData<MutableList<TweetsDO>> = MutableLiveData()
 
     fun createTweet(msg : String,index: Int) : TweetsDO {
@@ -136,5 +137,10 @@ class DynamoDbUtils(private var awsProvider: AWSProvider,private var networkMana
     fun checkCachedUserId() : Boolean{
         Timber.d("UserSignedIn ${awsProvider.isUserSignedIn.value} ${awsProvider.cachedUserID}")
         return awsProvider.cachedUserID != null
+    }
+
+
+    fun clearDbInstance(){
+        dynamoDBMapper = null
     }
 }

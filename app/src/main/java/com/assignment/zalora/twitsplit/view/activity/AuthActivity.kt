@@ -22,7 +22,6 @@ class AuthActivity : DaggerAppCompatActivity() {
         super.onCreate(savedInstanceState)
         AndroidInjection.inject(this)
         setContentView(R.layout.activity_auth)
-        initObserver()
         promptLogin(this@AuthActivity)
     }
 
@@ -45,17 +44,6 @@ class AuthActivity : DaggerAppCompatActivity() {
                 }
             }
         )
-    }
-
-    private fun initObserver(){
-        awsProvider.isUserSignedIn.observe(this, Observer {
-            when(it){
-                true -> {
-                    Timber.d("UserSignedIn Auth")
-                    finish()
-                }
-            }
-        })
     }
 
 }

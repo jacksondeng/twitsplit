@@ -1,21 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
-        xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <data>
-        <variable
-                name="position"
-                type="java.lang.Integer" />
-
-        <variable
-                name="tweetVM"
-                type="com.assignment.zalora.twitsplit.viewmodel.TweetVM" />
-    </data>
 
     <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:id="@+id/itemBackground">
 
         <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
@@ -43,7 +34,6 @@
                     android:ellipsize="end"
                     android:textStyle="bold"
                     android:textSize="@dimen/text_size_large"
-                    android:text="@{tweetVM.getTweetAt(position).msg}"
                     android:id="@+id/tweetTv"/>
 
 
@@ -56,7 +46,6 @@
                     app:layout_constraintWidth_percent="0.8"
                     android:layout_height="wrap_content"
                     app:layout_constraintHorizontal_bias="0.2"
-                    android:text="@{tweetVM.getTweetAt(position).creationDate}"
                     android:textSize="@dimen/text_size_small"
                     android:id="@+id/datePostedTv"/>
 

@@ -40,7 +40,6 @@ class AWSProvider(){
                     when (userStateDetails.userState) {
                         UserState.SIGNED_IN -> {
                             isUserSignedIn.postValue(true)
-                            instanceState.postValue(AWSInstanceState.Initialized)
                             retrieveUserInfo()
                         }
 
@@ -48,15 +47,13 @@ class AWSProvider(){
                             isUserSignedIn.postValue(false)
                             instanceState.postValue(AWSInstanceState.Initialized)
                         }
-                        else -> {
-                            AWSMobileClient.getInstance().signOut()
-                            isUserSignedIn.postValue(false)
-                            instanceState.postValue(AWSInstanceState.Initialized)
-                        }
                     }
+
+                    instanceState.postValue(AWSInstanceState.Initialized)
                 }
 
                 override fun onError(e: Exception) {
+                    Timber.d("UserSignedIn $e")
                     instance!!.signOut()
                     isUserSignedIn.postValue(false)
                     instanceState.postValue(AWSInstanceState.Initialized)
@@ -72,11 +69,15 @@ class AWSProvider(){
             override fun onUserStateChanged(details: UserStateDetails) {
                 when(details.userState){
                     UserState.SIGNED_IN ->{
+                        awsCredentials = instance!!.awsCredentials
                         isUserSignedIn.postValue(true)
                         retrieveUserInfo()
                     }
 
-                    else ->{
+                    UserState.SIGNED_OUT -> {
+                        username = null
+                        cachedUserID = null
+                        awsCredentials = null
                         isUserSignedIn.postValue(false)
                     }
                 }
@@ -89,6 +90,10 @@ class AWSProvider(){
         username = instance!!.username
         isUserSignedIn.postValue(instance!!.isSignedIn)
         awsCredentials = instance!!.awsCredentials
+    }
+
+    fun signOut(){
+        instance!!.signOut()
     }
 
 

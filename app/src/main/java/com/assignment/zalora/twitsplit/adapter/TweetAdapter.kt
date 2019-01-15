@@ -6,16 +6,27 @@ import android.view.View
 import android.view.ViewGroup
 import com.assignment.zalora.twitsplit.R
 import com.assignment.zalora.twitsplit.model.TweetsDO
+import com.assignment.zalora.twitsplit.util.adapter.OnItemClickedCallback
+import com.assignment.zalora.twitsplit.util.adapter.listen
 import kotlinx.android.synthetic.main.tweet_item.view.*
 import org.joda.time.DateTime
+import timber.log.Timber
 import javax.inject.Inject
 
 class TweetAdapter @Inject constructor(): RecyclerView.Adapter<TweetAdapter.ViewHolder>(){
 
     var tweets : MutableList<TweetsDO> ?= null
+    var onItemClickedCallback : OnItemClickedCallback ?= null
 
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): TweetAdapter.ViewHolder {
-        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.tweet_item, parent, false))
+        onItemClickedCallback = parent.context as OnItemClickedCallback
+
+        val inflater = LayoutInflater.from(parent.getContext())
+        val view = inflater.inflate(R.layout.tweet_item, parent, false)
+        return ViewHolder(view).listen { pos, type ->
+            Timber.d("Tweets selected ${tweets!!.get(pos)}")
+            onItemClickedCallback!!.gotoTweetDetails(tweets!!.get(pos))
+        }
     }
 
     override fun getItemCount(): Int {
@@ -53,4 +64,5 @@ class TweetAdapter @Inject constructor(): RecyclerView.Adapter<TweetAdapter.View
         tweets?.removeAt(position)
         notifyItemRemoved(position)
     }
+
 }
