@@ -28,8 +28,8 @@ class TweetAdapter @Inject constructor(): RecyclerView.Adapter<TweetAdapter.View
     }
 
     class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
-        val tweet = view.tweet_tv
-        val datePosted = view.date_posted_tv
+        val tweet = view.tweetTv
+        val datePosted = view.datePostedTv
     }
 
     override fun onBindViewHolder(viewHolder: TweetAdapter.ViewHolder, pos: Int) {

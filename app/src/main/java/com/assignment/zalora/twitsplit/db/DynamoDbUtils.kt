@@ -134,7 +134,7 @@ class DynamoDbUtils(private var awsProvider: AWSProvider,private var networkMana
     }
 
     fun checkCachedUserId() : Boolean{
-        Timber.d("UserSignedIn ${awsProvider.isUserSignedIn} ${awsProvider.cachedUserID}")
+        Timber.d("UserSignedIn ${awsProvider.isUserSignedIn.value} ${awsProvider.cachedUserID}")
         return awsProvider.cachedUserID != null
     }
 }

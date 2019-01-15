@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.FragmentManager
 import com.assignment.zalora.twitsplit.R
@@ -18,7 +19,7 @@ import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_base.*
 import timber.log.Timber
 import javax.inject.Inject
-import android.widget.ProgressBar
+import com.assignment.zalora.twitsplit.util.aws.AWSProvider
 
 
 open class BaseActivity : DaggerAppCompatActivity(), StatusUtils {
@@ -104,6 +105,24 @@ open class BaseActivity : DaggerAppCompatActivity(), StatusUtils {
         var errorDialog = ErrorDialogFragment.newInstance(errMsg,title)
         errorDialog.isCancelable = false
         errorDialog.show(fm, "fragment_dialog_error");
+    }
+
+    fun checkIfUserSignedIn() : Boolean{
+        Timber.d("UserSignedIn ${tweetVM.isUserSignedIn.value} ${tweetVM.userName}")
+        //return awsProvider.cachedUserID != null
+        return tweetVM.isUserSignedIn.value!!
+    }
+
+    fun gotoAuth(){
+        val intent = Intent(this, AuthActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    fun gotoMain(){
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
 }

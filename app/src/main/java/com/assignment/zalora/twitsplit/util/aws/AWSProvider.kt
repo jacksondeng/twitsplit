@@ -7,6 +7,7 @@ import com.amazonaws.mobile.auth.core.IdentityManager
 import com.amazonaws.mobile.config.AWSConfiguration
 import javax.inject.Singleton
 import com.amazonaws.mobile.client.*
+import com.assignment.zalora.twitsplit.util.extension.SingleLiveEvent
 import com.assignment.zalora.twitsplit.util.state.AuthState
 import timber.log.Timber
 
@@ -20,7 +21,7 @@ class AWSProvider(){
     var instanceState : MutableLiveData<AWSInstanceState> = MutableLiveData()
     var cachedUserID : String ?= null
     var username : String ?= null
-    var isUserSignedIn : MutableLiveData<Boolean> = MutableLiveData()
+    var isUserSignedIn : SingleLiveEvent<Boolean> = SingleLiveEvent()
 
     init {
         instanceState.postValue(AWSInstanceState.NotInitialized)
@@ -29,28 +30,25 @@ class AWSProvider(){
     @Synchronized
     fun initialize(context: Context) {
         if (instance == null) {
-
             AWSMobileClient.getInstance().initialize(context, object : Callback<UserStateDetails> {
                 override fun onResult(userStateDetails: UserStateDetails) {
                     configuration = AWSMobileClient.getInstance().configuration
                     instance = AWSMobileClient.getInstance()
                     awsCredentials = AWSMobileClient.getInstance().awsCredentials
+                    initUserStateListeners()
 
                     when (userStateDetails.userState) {
                         UserState.SIGNED_IN -> {
-                            Timber.d("testt SignedIn")
                             isUserSignedIn.postValue(true)
                             instanceState.postValue(AWSInstanceState.Initialized)
                             retrieveUserInfo()
                         }
 
                         UserState.SIGNED_OUT -> {
-                            Timber.d("testt SignedOut")
                             isUserSignedIn.postValue(false)
                             instanceState.postValue(AWSInstanceState.Initialized)
                         }
                         else -> {
-                            Timber.d("testt SignedOut")
                             AWSMobileClient.getInstance().signOut()
                             isUserSignedIn.postValue(false)
                             instanceState.postValue(AWSInstanceState.Initialized)
@@ -59,9 +57,7 @@ class AWSProvider(){
                 }
 
                 override fun onError(e: Exception) {
-                    Timber.d("testt failed $e")
-                    Timber.d("testt SignedOut")
-                    AWSMobileClient.getInstance().signOut()
+                    instance!!.signOut()
                     isUserSignedIn.postValue(false)
                     instanceState.postValue(AWSInstanceState.Initialized)
                 }
@@ -71,14 +67,28 @@ class AWSProvider(){
         }
     }
 
+    private fun initUserStateListeners() {
+        AWSMobileClient.getInstance().addUserStateListener(object : UserStateListener {
+            override fun onUserStateChanged(details: UserStateDetails) {
+                when(details.userState){
+                    UserState.SIGNED_IN ->{
+                        isUserSignedIn.postValue(true)
+                        retrieveUserInfo()
+                    }
+
+                    else ->{
+                        isUserSignedIn.postValue(false)
+                    }
+                }
+            }
+        })
+    }
+
     fun retrieveUserInfo(){
         cachedUserID = instance!!.identityId
         username = instance!!.username
         isUserSignedIn.postValue(instance!!.isSignedIn)
         awsCredentials = instance!!.awsCredentials
-        Timber.d("testt Cached $cachedUserID")
-        Timber.d("testt Cached {${instance!!.username}}")
-        Timber.d("testt Cached {${instance!!.isSignedIn}}")
     }
 
 

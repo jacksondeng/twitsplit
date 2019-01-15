@@ -1,6 +1,7 @@
 package com.assignment.zalora.twitsplit.view.activity
 
 import android.arch.lifecycle.Observer
+import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import com.assignment.zalora.twitsplit.R
@@ -29,13 +30,13 @@ class MainActivity : BaseActivity(), OnDataPass {
     }
 
     override fun onDataPass(refreshing: Boolean) {
-        swipe_container.isRefreshing = refreshing
+        swipeContainer.isRefreshing = refreshing
     }
 
 
     override fun onResume() {
         super.onResume()
-        if(tweetVM.isUserSignedIn!= null && tweetVM.isUserSignedIn.value!!) {
+        if(tweetVM.isUserSignedIn.value!!) {
             loadTweets()
         }
     }
@@ -60,7 +61,7 @@ class MainActivity : BaseActivity(), OnDataPass {
                 true ->{
                     loadTweets()
                 } else -> {
-
+                    gotoAuth()
                 }
             }
         })
@@ -73,8 +74,9 @@ class MainActivity : BaseActivity(), OnDataPass {
     }
 
     private fun initListeners(){
-        post_cl.setOnClickListener { showInputMsgDialog() }
-        swipe_container.setOnRefreshListener{ loadTweets() }
+        postCl.setOnClickListener { showInputMsgDialog() }
+        swipeContainer.setOnRefreshListener{ loadTweets() }
+        btnLogout.setOnClickListener{ tweetVM.logout() }
     }
 
     private fun initAdapter(){
@@ -84,7 +86,7 @@ class MainActivity : BaseActivity(), OnDataPass {
 
     private fun updatelist(){
         tweetVM.setTweetList(tweetVM.tweetList.value!!)
-        swipe_container.isRefreshing = false
+        swipeContainer.isRefreshing = false
     }
 }
 

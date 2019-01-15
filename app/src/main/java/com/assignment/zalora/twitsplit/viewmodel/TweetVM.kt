@@ -7,17 +7,19 @@ import com.assignment.zalora.twitsplit.adapter.TweetAdapter
 import com.assignment.zalora.twitsplit.db.DynamoDbUtils
 import com.assignment.zalora.twitsplit.model.TweetsDO
 import com.assignment.zalora.twitsplit.util.aws.AWSProvider
+import com.assignment.zalora.twitsplit.util.extension.SingleLiveEvent
 import com.assignment.zalora.twitsplit.util.network.NetworkManager
 import com.assignment.zalora.twitsplit.util.state.LoadingState
 import javax.inject.Inject
 
-class TweetVM @Inject constructor(private val dynamoDbUtils: DynamoDbUtils, private val awsProvider: AWSProvider
+class TweetVM @Inject constructor(private val dynamoDbUtils: DynamoDbUtils, val awsProvider: AWSProvider
                                   ,val tweetAdapter: TweetAdapter)
     : ViewModel(), LifecycleObserver {
 
     var tweetList : MutableLiveData<MutableList<TweetsDO>> = dynamoDbUtils.tweetList
     var loadingState : MutableLiveData<LoadingState> = dynamoDbUtils.loadingState
-    var isUserSignedIn : MutableLiveData<Boolean> = awsProvider.isUserSignedIn
+    var isUserSignedIn : SingleLiveEvent<Boolean> = awsProvider.isUserSignedIn
+    var userName : String? = awsProvider.username
 
     fun postTweet(msgList : List<String>){
         dynamoDbUtils.postTweet(msgList)
@@ -37,6 +39,10 @@ class TweetVM @Inject constructor(private val dynamoDbUtils: DynamoDbUtils, priv
 
     fun setTweetList(tweetList : MutableList<TweetsDO>){
         tweetAdapter.setTweetList(tweetList)
+    }
+
+    fun logout(){
+        awsProvider.instance!!.signOut()
     }
 
 }

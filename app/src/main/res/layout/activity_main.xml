@@ -15,6 +15,20 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 
+        <android.support.design.widget.FloatingActionButton
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:background="@android:color/transparent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnLogout"
+                app:srcCompat="@drawable/logout_icon"
+                app:backgroundTint="@android:color/white"
+                app:layout_constraintHorizontal_bias="0.95"
+                app:layout_constraintVertical_bias="0.95"/>
+
         <android.support.constraint.ConstraintLayout
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -26,7 +40,7 @@
                 app:layout_constraintWidth_percent="0.7"
                 app:layout_constraintHeight_percent="0.06"
                 android:background="@drawable/rounded_corner_background"
-                android:id="@+id/post_cl">
+                android:id="@+id/postCl">
 
             <TextView
                     android:layout_width="match_parent"
@@ -42,8 +56,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 app:layout_constraintHeight_percent="0.9"
-                android:id="@+id/swipe_container"
-                app:layout_constraintTop_toBottomOf="@id/post_cl"
+                android:id="@+id/swipeContainer"
+                app:layout_constraintTop_toBottomOf="@id/postCl"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent">

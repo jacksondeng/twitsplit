@@ -44,11 +44,11 @@
                     android:textStyle="bold"
                     android:textSize="@dimen/text_size_large"
                     android:text="@{tweetVM.getTweetAt(position).msg}"
-                    android:id="@+id/tweet_tv"/>
+                    android:id="@+id/tweetTv"/>
 
 
             <TextView
-                    app:layout_constraintTop_toBottomOf="@id/tweet_tv"
+                    app:layout_constraintTop_toBottomOf="@id/tweetTv"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toRightOf="@id/guideline"
                     app:layout_constraintRight_toRightOf="parent"
@@ -58,7 +58,7 @@
                     app:layout_constraintHorizontal_bias="0.2"
                     android:text="@{tweetVM.getTweetAt(position).creationDate}"
                     android:textSize="@dimen/text_size_small"
-                    android:id="@+id/date_posted_tv"/>
+                    android:id="@+id/datePostedTv"/>
 
         </android.support.constraint.ConstraintLayout>
 

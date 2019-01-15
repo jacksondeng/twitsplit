@@ -14,10 +14,7 @@ import kotlinx.android.synthetic.main.activity_splash.*
 import timber.log.Timber
 import javax.inject.Inject
 
-class SplashActivity : AppCompatActivity() {
-
-    @Inject
-    lateinit var awsProvider: AWSProvider
+class SplashActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
@@ -28,7 +25,7 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun observeInstanceState(){
-        awsProvider.instanceState.observe(this, Observer {
+        tweetVM.awsProvider.instanceState.observe(this, Observer {
                 instanceState ->
             when(instanceState){
                 AWSInstanceState.Initialized ->{
@@ -42,21 +39,4 @@ class SplashActivity : AppCompatActivity() {
         })
     }
 
-    private fun checkIfUserSignedIn() : Boolean{
-        Timber.d("UserSignedIn ${awsProvider.isUserSignedIn} ${awsProvider.cachedUserID}")
-        //return awsProvider.cachedUserID != null
-        return awsProvider.isUserSignedIn.value!!
-    }
-
-    private fun gotoAuth(){
-        val intent = Intent(this, AuthActivity::class.java)
-        startActivity(intent)
-        finish()
-    }
-
-    private fun gotoMain(){
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-        finish()
-    }
 }

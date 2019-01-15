@@ -1,23 +1,19 @@
 package com.assignment.zalora.twitsplit.view.activity
 
 import android.app.Activity
+import android.arch.lifecycle.Observer
 import android.graphics.Color
 import android.os.Bundle
-import com.amazonaws.mobile.auth.core.SignInStateChangeListener
-import com.amazonaws.mobile.auth.ui.AuthUIConfiguration
-import com.amazonaws.mobile.auth.ui.SignInUI
 import com.amazonaws.mobile.client.*
 import com.assignment.zalora.twitsplit.R
 import com.assignment.zalora.twitsplit.util.aws.AWSProvider
-import com.assignment.zalora.twitsplit.util.state.AuthState
 import dagger.android.AndroidInjection
 import dagger.android.support.DaggerAppCompatActivity
-
-import javax.inject.Inject
 import timber.log.Timber
+import javax.inject.Inject
 
 
-class AuthActivity : DaggerAppCompatActivity(),AuthState {
+class AuthActivity : DaggerAppCompatActivity() {
 
     @Inject
     lateinit var awsProvider: AWSProvider
@@ -26,13 +22,13 @@ class AuthActivity : DaggerAppCompatActivity(),AuthState {
         super.onCreate(savedInstanceState)
         AndroidInjection.inject(this)
         setContentView(R.layout.activity_auth)
-        initUserStateListeners()
+        initObserver()
         promptLogin(this@AuthActivity)
     }
 
 
-    fun promptLogin(activity: Activity){
-        AWSMobileClient.getInstance().showSignIn(
+    private fun promptLogin(activity: Activity){
+        awsProvider.instance!!.showSignIn(
             activity,
             SignInUIOptions.builder()
                 .nextActivity(MainActivity::class.java)
@@ -51,33 +47,15 @@ class AuthActivity : DaggerAppCompatActivity(),AuthState {
         )
     }
 
-    private fun initUserStateListeners() {
-        AWSMobileClient.getInstance().addUserStateListener(object : UserStateListener {
-            override fun onUserStateChanged(details: UserStateDetails) {
-                when(details.userState){
-                    UserState.SIGNED_IN ->{
-                        awsProvider.isUserSignedIn.postValue(true)
-                        awsProvider.retrieveUserInfo()
-                        signedIn()
-                    }
-
-                    else ->{
-                        awsProvider.isUserSignedIn.postValue(false)
-                        signedOut()
-                    }
+    private fun initObserver(){
+        awsProvider.isUserSignedIn.observe(this, Observer {
+            when(it){
+                true -> {
+                    Timber.d("UserSignedIn Auth")
+                    finish()
                 }
             }
         })
-    }
-
-    override fun signedIn() {
-        Timber.d("testt SignedIn")
-        finish()
-    }
-
-
-    override fun signedOut() {
-
     }
 
 }
