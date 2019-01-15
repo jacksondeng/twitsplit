@@ -17,6 +17,7 @@ class TweetVM @Inject constructor(private val dynamoDbUtils: DynamoDbUtils, priv
 
     var tweetList : MutableLiveData<MutableList<TweetsDO>> = dynamoDbUtils.tweetList
     var loadingState : MutableLiveData<LoadingState> = dynamoDbUtils.loadingState
+    var isUserSignedIn : MutableLiveData<Boolean> = awsProvider.isUserSignedIn
 
     fun postTweet(msgList : List<String>){
         dynamoDbUtils.postTweet(msgList)

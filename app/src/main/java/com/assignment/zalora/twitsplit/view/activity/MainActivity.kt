@@ -21,7 +21,7 @@ class MainActivity : BaseActivity(), OnDataPass {
         initBindings()
         initListeners()
         initAdapter()
-        initTweetListObserver()
+        initObservers()
     }
 
     override fun onDataPass(msg: String) {
@@ -35,14 +35,16 @@ class MainActivity : BaseActivity(), OnDataPass {
 
     override fun onResume() {
         super.onResume()
-        loadTweets()
+        if(tweetVM.isUserSignedIn!= null && tweetVM.isUserSignedIn.value!!) {
+            loadTweets()
+        }
     }
 
     private fun loadTweets(){
         tweetVM.loadTweets()
     }
 
-    private fun initTweetListObserver(){
+    private fun initObservers(){
         tweetVM.tweetList.observe(this, Observer {
             when(it){
                 null -> {
@@ -52,6 +54,17 @@ class MainActivity : BaseActivity(), OnDataPass {
                 }
             }
         })
+
+        tweetVM.isUserSignedIn.observe(this, Observer {
+            when(it){
+                true ->{
+                    loadTweets()
+                } else -> {
+
+                }
+            }
+        })
+
     }
 
     private fun initBindings(){

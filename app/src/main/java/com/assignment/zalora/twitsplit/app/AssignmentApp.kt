@@ -10,6 +10,9 @@ import dagger.android.HasActivityInjector
 import net.danlew.android.joda.JodaTimeAndroid
 import timber.log.Timber
 import javax.inject.Inject
+import com.amazonaws.mobile.client.UserStateDetails
+import com.amazonaws.mobile.client.AWSMobileClient
+import com.amazonaws.mobile.client.Callback
 
 
 class AssignmentApp : Application(), HasActivityInjector {
@@ -17,6 +20,8 @@ class AssignmentApp : Application(), HasActivityInjector {
     @Inject
     lateinit var dispatchingAndroidInjector : DispatchingAndroidInjector<Activity>;
 
+    @Inject
+    lateinit var awsProvider : AWSProvider
     override fun activityInjector() : DispatchingAndroidInjector<Activity> {
         return dispatchingAndroidInjector;
     }
@@ -30,9 +35,10 @@ class AssignmentApp : Application(), HasActivityInjector {
         // Init JodaTime
         JodaTimeAndroid.init(this);
         initDagger();
+        initAwsProvider()
     }
 
-    fun initDagger() {
+    private fun initDagger() {
         // Init dagger
         DaggerAssignmentAppComponent
             .builder()
@@ -40,5 +46,10 @@ class AssignmentApp : Application(), HasActivityInjector {
             .build()
             .inject(this);
     }
+
+    private fun initAwsProvider(){
+        awsProvider.initialize(applicationContext)
+    }
+
 
 }

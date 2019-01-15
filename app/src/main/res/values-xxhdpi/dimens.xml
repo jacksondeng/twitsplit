@@ -1,8 +1,8 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
-    <dimen name="text_size_small">8sp</dimen>
-    <dimen name="text_size_normal">10sp</dimen>
-    <dimen name="text_size_large">14sp</dimen>
+    <dimen name="text_size_small">9sp</dimen>
+    <dimen name="text_size_normal">11sp</dimen>
+    <dimen name="text_size_large">15sp</dimen>
     <dimen name="fragment_input_msg_et_padding">10dp</dimen>
     <dimen name="dialog_width">250dp</dimen>
     <dimen name="dialog_height">235dp</dimen>

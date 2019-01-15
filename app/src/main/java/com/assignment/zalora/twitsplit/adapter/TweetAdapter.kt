@@ -1,6 +1,5 @@
 package com.assignment.zalora.twitsplit.adapter
 
-import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +9,6 @@ import com.assignment.zalora.twitsplit.model.TweetsDO
 import kotlinx.android.synthetic.main.tweet_item.view.*
 import org.joda.time.DateTime
 import javax.inject.Inject
-
 
 class TweetAdapter @Inject constructor(): RecyclerView.Adapter<TweetAdapter.ViewHolder>(){
 
@@ -41,14 +39,13 @@ class TweetAdapter @Inject constructor(): RecyclerView.Adapter<TweetAdapter.View
         }
     }
 
-
     fun setTweetList(tweets: MutableList<TweetsDO>){
         this.tweets = tweets
         this.notifyDataSetChanged()
     }
 
     fun getDateTimeFromLong(millis : Long) :String{
-        var dt = DateTime(millis)
+        val dt = DateTime(millis)
         return dt.toLocalDateTime().toString()
     }
 

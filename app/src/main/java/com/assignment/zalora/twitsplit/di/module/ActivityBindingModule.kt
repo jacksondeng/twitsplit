@@ -1,10 +1,7 @@
 package com.assignment.zalora.twitsplit.di.module
 
-import com.assignment.zalora.twitsplit.view.activity.AuthActivity
-import com.assignment.zalora.twitsplit.view.activity.BaseActivity
+import com.assignment.zalora.twitsplit.view.activity.*
 import dagger.android.ContributesAndroidInjector
-import com.assignment.zalora.twitsplit.view.activity.MainActivity
-import com.assignment.zalora.twitsplit.view.activity.SplashActivity
 import dagger.Module
 
 
@@ -23,4 +20,6 @@ abstract class ActivityBindingModule {
     @ContributesAndroidInjector
     internal abstract fun contributeToAuthActivity(): AuthActivity
 
+    @ContributesAndroidInjector
+    internal abstract fun contributeToTweetDetailsActivity(): TweetDetailsActivity
 }

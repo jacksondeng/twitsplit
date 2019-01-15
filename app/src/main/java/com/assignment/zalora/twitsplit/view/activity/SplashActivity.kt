@@ -24,15 +24,10 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         AndroidInjection.inject(this)
         setContentView(R.layout.activity_splash)
-        initAwsProvider()
         observeInstanceState()
     }
 
-    fun initAwsProvider(){
-        awsProvider.initialize(this)
-    }
-
-    fun observeInstanceState(){
+    private fun observeInstanceState(){
         awsProvider.instanceState.observe(this, Observer {
                 instanceState ->
             when(instanceState){
@@ -47,18 +42,19 @@ class SplashActivity : AppCompatActivity() {
         })
     }
 
-    fun checkIfUserSignedIn() : Boolean{
+    private fun checkIfUserSignedIn() : Boolean{
         Timber.d("UserSignedIn ${awsProvider.isUserSignedIn} ${awsProvider.cachedUserID}")
-        return awsProvider.cachedUserID != null
+        //return awsProvider.cachedUserID != null
+        return awsProvider.isUserSignedIn.value!!
     }
 
-    fun gotoAuth(){
+    private fun gotoAuth(){
         val intent = Intent(this, AuthActivity::class.java)
         startActivity(intent)
         finish()
     }
 
-    fun gotoMain(){
+    private fun gotoMain(){
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()

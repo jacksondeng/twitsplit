@@ -18,14 +18,14 @@ import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_base.*
 import timber.log.Timber
 import javax.inject.Inject
+import android.widget.ProgressBar
 
 
 open class BaseActivity : DaggerAppCompatActivity(), StatusUtils {
-    private lateinit var dialog : Dialog
-
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     lateinit var tweetVM : TweetVM
+    private lateinit var dialog : Dialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +33,7 @@ open class BaseActivity : DaggerAppCompatActivity(), StatusUtils {
         setSupportActionBar(toolbar)
         AndroidInjection.inject(this)
         initVm()
-        initObservers()
+        initLoadingStateObservers()
         initLoadingDialog()
     }
 
@@ -55,7 +55,7 @@ open class BaseActivity : DaggerAppCompatActivity(), StatusUtils {
        tweetVM = ViewModelProviders.of(this, viewModelFactory)[TweetVM::class.java]
     }
 
-    fun initObservers(){
+    fun initLoadingStateObservers(){
         tweetVM.loadingState.observe(this, Observer {
             when(it){
                 LoadingState.Loading,LoadingState.Deleting,LoadingState.Posting ->{
@@ -90,7 +90,7 @@ open class BaseActivity : DaggerAppCompatActivity(), StatusUtils {
     fun initLoadingDialog(){
         dialog = Dialog(this,android.R.style.Theme_Translucent_NoTitleBar_Fullscreen)
         dialog.setContentView(R.layout.progress_dialog)
-    }
+     }
 
     fun showInputMsgDialog(){
         var fm : FragmentManager = getSupportFragmentManager()

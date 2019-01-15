@@ -49,7 +49,7 @@ class DynamoDbUtils(private var awsProvider: AWSProvider,private var networkMana
 
                 loadingState.postValue(LoadingState.Loading)
             }
-            // Wait 200ms before loading tweets
+            // small delay to wait for dynamodb updates before loading tweets
             Handler().postDelayed({ loadTweets() }, 200)
         } else{
             loadingState.postValue(LoadingState.Error(ErrorCode.NetworkError))
@@ -64,7 +64,7 @@ class DynamoDbUtils(private var awsProvider: AWSProvider,private var networkMana
                 dynamoDBMapper?.delete(tweetsDO)
             }.join()
             loadingState.postValue(LoadingState.Loading)
-            // Wait 200ms before loading tweets
+            // small delay to wait for dynamodb updates before loading tweets
             Handler().postDelayed({ loadTweets() }, 200)
         } else{
             loadingState.postValue(LoadingState.Error(ErrorCode.NetworkError))
@@ -72,7 +72,6 @@ class DynamoDbUtils(private var awsProvider: AWSProvider,private var networkMana
     }
 
     fun loadTweets(){
-        Timber.d("loadTweets " + isConnectedToNetwork() + " " + checkCachedUserId())
         if(isConnectedToNetwork() && checkCachedUserId()) {
             initDbClient()
             var paginatedQueryList: PaginatedQueryList<TweetsDO>? = null
@@ -104,9 +103,9 @@ class DynamoDbUtils(private var awsProvider: AWSProvider,private var networkMana
     }
 
     fun initDbClient(){
-        if(awsProvider.identityManager.isUserSignedIn && dynamoDBMapper == null) {
+        if(awsProvider.isUserSignedIn.value!! && dynamoDBMapper == null) {
 
-            val client = AmazonDynamoDBClient(awsProvider.credentialsProvider)
+            val client = AmazonDynamoDBClient(awsProvider.awsCredentials)
             dynamoDBMapper = DynamoDBMapper.builder()
                 .dynamoDBClient(client)
                 .awsConfiguration(AWSMobileClient.getInstance().configuration)
