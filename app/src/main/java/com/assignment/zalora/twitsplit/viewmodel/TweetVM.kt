@@ -7,7 +7,7 @@ import com.assignment.zalora.twitsplit.adapter.TweetAdapter
 import com.assignment.zalora.twitsplit.db.DynamoDbUtils
 import com.assignment.zalora.twitsplit.model.TweetsDO
 import com.assignment.zalora.twitsplit.util.aws.AWSProvider
-import com.assignment.zalora.twitsplit.util.extension.SingleLiveEvent
+import com.assignment.zalora.twitsplit.util.SingleLiveEvent
 import com.assignment.zalora.twitsplit.util.state.LoadingState
 import javax.inject.Inject
 
@@ -17,7 +17,7 @@ class TweetVM @Inject constructor(private val dynamoDbUtils: DynamoDbUtils, val 
 
     var tweetList : MutableLiveData<MutableList<TweetsDO>> = dynamoDbUtils.tweetList
     var loadingState : SingleLiveEvent<LoadingState> = dynamoDbUtils.loadingState
-    var isUserSignedIn : SingleLiveEvent<Boolean> = awsProvider.isUserSignedIn
+    var isUserSignedIn : MutableLiveData<Boolean> = awsProvider.isUserSignedIn
     var userName : String? = awsProvider.username
     var selectedTweet : TweetsDO ?= null
 

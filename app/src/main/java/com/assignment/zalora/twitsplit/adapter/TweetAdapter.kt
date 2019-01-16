@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import com.assignment.zalora.twitsplit.R
 import com.assignment.zalora.twitsplit.model.TweetsDO
 import com.assignment.zalora.twitsplit.util.adapter.OnItemClickedCallback
-import com.assignment.zalora.twitsplit.util.adapter.listen
+import com.assignment.zalora.twitsplit.util.extension.listen
 import kotlinx.android.synthetic.main.tweet_item.view.*
 import org.joda.time.DateTime
 import timber.log.Timber

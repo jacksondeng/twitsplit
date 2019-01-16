@@ -13,14 +13,13 @@ import timber.log.Timber
 import javax.inject.Inject
 
 
-class AuthActivity : DaggerAppCompatActivity() {
+class AuthActivity : BaseActivity() {
 
     @Inject
     lateinit var awsProvider: AWSProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        AndroidInjection.inject(this)
         setContentView(R.layout.activity_auth)
         promptLogin(this@AuthActivity)
     }
@@ -37,10 +36,13 @@ class AuthActivity : DaggerAppCompatActivity() {
                 .build(),
             object : Callback<UserStateDetails> {
                 override fun onResult(userStateDetails: UserStateDetails) {
-
+                    Timber.d("test123" +
+                            " ${userStateDetails.userState}")
+                    finish()
                 }
 
                 override fun onError(e: Exception) {
+                    Timber.d("test12312 $e")
                 }
             }
         )

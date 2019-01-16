@@ -1,6 +1,5 @@
-package com.assignment.zalora.twitsplit.util.extension
+package com.assignment.zalora.twitsplit.util
 
-import android.databinding.adapters.NumberPickerBindingAdapter.setValue
 import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer

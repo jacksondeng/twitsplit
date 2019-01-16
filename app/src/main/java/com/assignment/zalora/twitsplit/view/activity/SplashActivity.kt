@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.support.v7.app.AppCompatActivity;
+import com.amazonaws.mobile.client.UserState
 import com.assignment.zalora.twitsplit.R
 import com.assignment.zalora.twitsplit.util.aws.AWSInstanceState
 import com.assignment.zalora.twitsplit.util.aws.AWSProvider
@@ -28,12 +29,15 @@ class SplashActivity : BaseActivity() {
                 instanceState ->
             when(instanceState){
                 AWSInstanceState.Initialized ->{
-                    if(checkIfUserSignedIn()){
-                        gotoMain()
-                    }else{
-                        gotoAuth()
-                    }
+
                 }
+            }
+        })
+
+        tweetVM.isUserSignedIn.observe(this, Observer {
+            when(it){
+                true -> gotoMain()
+                false -> gotoAuth()
             }
         })
     }

@@ -19,6 +19,7 @@ class MainActivity : BaseActivity(), OnDataPass,OnItemClickedCallback {
 
     private var msgUtils = MessageUtils()
     private lateinit var mainBinding : ActivityMainBinding
+    private var logoutClicked = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,14 +37,6 @@ class MainActivity : BaseActivity(), OnDataPass,OnItemClickedCallback {
         swipeContainer.isRefreshing = refreshing
     }
 
-
-    override fun onResume() {
-        super.onResume()
-        if(tweetVM.isUserSignedIn.value!!) {
-            loadTweets()
-        }
-    }
-
     private fun loadTweets(){
         tweetVM.loadTweets()
     }
@@ -51,9 +44,8 @@ class MainActivity : BaseActivity(), OnDataPass,OnItemClickedCallback {
     private fun initObservers(){
         tweetVM.tweetList.observe(this, Observer {
             when(it){
-                null -> {
-                }
-                else ->{
+                // Returns the list if it's not `null`, or an empty array otherwise.
+                (it.orEmpty()) -> {
                     updatelist()
                 }
             }
@@ -64,7 +56,9 @@ class MainActivity : BaseActivity(), OnDataPass,OnItemClickedCallback {
                 true ->{
                     loadTweets()
                 } else -> {
-                    gotoAuth()
+                    if(logoutClicked) {
+                        gotoAuth()
+                    }
                 }
             }
         })
@@ -79,7 +73,9 @@ class MainActivity : BaseActivity(), OnDataPass,OnItemClickedCallback {
     private fun initListeners(){
         postCl.setOnClickListener { showInputMsgDialog() }
         swipeContainer.setOnRefreshListener{ loadTweets() }
-        btnLogout.setOnClickListener{ tweetVM.signOut() }
+        btnLogout.setOnClickListener{
+            logoutClicked = true
+            tweetVM.signOut() }
     }
 
     private fun initAdapter(){

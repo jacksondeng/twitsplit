@@ -9,7 +9,7 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedQueryLi
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient
 import com.assignment.zalora.twitsplit.model.TweetsDO
 import com.assignment.zalora.twitsplit.util.aws.AWSProvider
-import com.assignment.zalora.twitsplit.util.extension.SingleLiveEvent
+import com.assignment.zalora.twitsplit.util.SingleLiveEvent
 import com.assignment.zalora.twitsplit.util.network.NetworkManager
 import com.assignment.zalora.twitsplit.util.state.ErrorCode
 import com.assignment.zalora.twitsplit.util.state.LoadingState
@@ -21,7 +21,8 @@ import kotlin.concurrent.thread
 class DynamoDbUtils(private var awsProvider: AWSProvider,private var networkManager: NetworkManager){
 
     var dynamoDBMapper: DynamoDBMapper ? = null
-    var loadingState : SingleLiveEvent<LoadingState> = SingleLiveEvent()
+    var loadingState : SingleLiveEvent<LoadingState> =
+        SingleLiveEvent()
     var tweetList : MutableLiveData<MutableList<TweetsDO>> = MutableLiveData()
 
     fun createTweet(msg : String,index: Int) : TweetsDO {

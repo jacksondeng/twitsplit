@@ -109,8 +109,13 @@ open class BaseActivity : DaggerAppCompatActivity(), StatusUtils {
 
     fun checkIfUserSignedIn() : Boolean{
         Timber.d("UserSignedIn ${tweetVM.isUserSignedIn.value} ${tweetVM.userName}")
-        //return awsProvider.cachedUserID != null
-        return tweetVM.isUserSignedIn.value!!
+        return (tweetVM.isUserSignedIn.value != null && tweetVM.isUserSignedIn.value!!)
+    }
+
+    fun gotoSplash(){
+        val intent = Intent(this, SplashActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     fun gotoAuth(){

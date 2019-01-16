@@ -1,4 +1,4 @@
-package com.assignment.zalora.twitsplit.util.adapter
+package com.assignment.zalora.twitsplit.util.extension
 
 import android.support.v7.widget.RecyclerView
 
