@@ -21,6 +21,7 @@ class SplashActivity : BaseActivity() {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
+        checkForUserState()
         observeInstanceState()
     }
 
@@ -40,6 +41,16 @@ class SplashActivity : BaseActivity() {
                 false -> gotoAuth()
             }
         })
+    }
+
+    // Checking for case where user start app from recent apps , Application class oncreate doens't get called
+    private fun checkForUserState(){
+        if(tweetVM.awsProvider.instance != null && tweetVM.awsProvider.instanceState.value == AWSInstanceState.Initialized){
+            when(tweetVM.isUserSignedIn.value){
+                true-> gotoMain()
+                false -> gotoAuth()
+            }
+        }
     }
 
 }
