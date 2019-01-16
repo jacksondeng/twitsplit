@@ -119,11 +119,13 @@ class DynamoDbUtils(private var awsProvider: AWSProvider,private var networkMana
         return (System.currentTimeMillis()+prefix).toString()
     }
 
+    // Need to convert to MutableList for deleting tweet because paginatedQueryList cannot be modified
     fun convertPaginatedListToList(paginatedQueryList: PaginatedQueryList<TweetsDO>?) : MutableList<TweetsDO>{
         var list = ArrayList<TweetsDO>()
         thread(start = true) {
             if (paginatedQueryList != null) {
                 paginatedQueryList.forEach {
+                    it.username = awsProvider.username
                     list.add(it)
                 }
             }
@@ -136,11 +138,10 @@ class DynamoDbUtils(private var awsProvider: AWSProvider,private var networkMana
     }
 
     fun checkCachedUserId() : Boolean{
-        Timber.d("UserSignedIn ${awsProvider.isUserSignedIn.value} ${awsProvider.cachedUserID}")
         return awsProvider.cachedUserID != null
     }
 
-
+    // Clear dynamoDb instance for to reinitialize after user logged out
     fun clearDbInstance(){
         dynamoDBMapper = null
     }

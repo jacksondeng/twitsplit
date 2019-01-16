@@ -22,6 +22,7 @@ class AuthActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
         promptLogin(this@AuthActivity)
+        finish()
     }
 
 
@@ -36,13 +37,10 @@ class AuthActivity : BaseActivity() {
                 .build(),
             object : Callback<UserStateDetails> {
                 override fun onResult(userStateDetails: UserStateDetails) {
-                    Timber.d("test123" +
-                            " ${userStateDetails.userState}")
-                    finish()
+
                 }
 
                 override fun onError(e: Exception) {
-                    Timber.d("test12312 $e")
                 }
             }
         )

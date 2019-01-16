@@ -23,8 +23,8 @@ class DataModule {
 
     @Provides
     @Singleton
-    fun provideAWSProvider() : AWSProvider {
-        return AWSProvider()
+    fun provideAWSProvider(application: Application) : AWSProvider {
+        return AWSProvider(application)
     }
 
     @Provides

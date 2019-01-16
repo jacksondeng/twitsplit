@@ -9,7 +9,6 @@ import com.assignment.zalora.twitsplit.model.TweetsDO
 import com.assignment.zalora.twitsplit.util.adapter.OnItemClickedCallback
 import com.assignment.zalora.twitsplit.util.extension.listen
 import kotlinx.android.synthetic.main.tweet_item.view.*
-import org.joda.time.DateTime
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -41,23 +40,20 @@ class TweetAdapter @Inject constructor(): RecyclerView.Adapter<TweetAdapter.View
     class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
         val tweet = view.tweetTv
         val datePosted = view.datePostedTv
+        val username = view.usernameTv
     }
 
     override fun onBindViewHolder(viewHolder: TweetAdapter.ViewHolder, pos: Int) {
         if(tweets != null) {
             viewHolder.tweet.text = tweets!!.get(pos).msg
-            viewHolder.datePosted.text = getDateTimeFromLong(tweets!!.get(pos).creationDate.toLong())
+            viewHolder.datePosted.text = tweets!!.get(pos).getPostedDateTime()
+            viewHolder.username.text = tweets!!.get(pos).username
         }
     }
 
     fun setTweetList(tweets: MutableList<TweetsDO>){
         this.tweets = tweets
         this.notifyDataSetChanged()
-    }
-
-    fun getDateTimeFromLong(millis : Long) :String{
-        val dt = DateTime(millis)
-        return dt.toLocalDateTime().toString()
     }
 
     fun removeAt(position: Int) {

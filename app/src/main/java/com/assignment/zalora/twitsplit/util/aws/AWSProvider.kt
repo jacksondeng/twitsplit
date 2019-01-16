@@ -7,10 +7,13 @@ import com.amazonaws.mobile.config.AWSConfiguration
 import javax.inject.Singleton
 import com.amazonaws.mobile.client.*
 import timber.log.Timber
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserPool
+
+
 
 
 @Singleton
-class AWSProvider(){
+class AWSProvider(var context: Context){
 
     var configuration: AWSConfiguration ?= null
     var awsCredentials : AWSCredentials?= null
@@ -54,7 +57,7 @@ class AWSProvider(){
     }
 
     private fun initUserStateListeners() {
-        AWSMobileClient.getInstance().addUserStateListener { details ->
+        instance!!.addUserStateListener { details ->
             Timber.d("UserSignedIn State ${details.userState}")
             when(details.userState){
                 UserState.SIGNED_IN ->{
@@ -79,8 +82,11 @@ class AWSProvider(){
     }
 
     fun retrieveUserInfo(){
+        // Need to create a userpool instance because aws default SignInUi class doesn't have a way to get username directly
+        var userpool = CognitoUserPool(context, AWSConfiguration(context))
+        userpool.currentUser.userId
+        username = userpool.getCurrentUser().getUserId()
         cachedUserID = instance!!.identityId
-        username = instance!!.username
         awsCredentials = instance!!.awsCredentials
     }
 

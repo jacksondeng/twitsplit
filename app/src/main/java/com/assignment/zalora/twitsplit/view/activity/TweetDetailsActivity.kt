@@ -23,7 +23,7 @@ class TweetDetailsActivity : BaseActivity() {
 
     private fun initBindings(){
         tweetDetailsBinding = DataBindingUtil.setContentView(this, R.layout.activity_tweet_details);
-        tweetVM.selectedTweet = getIntent().getExtras().getSerializable("selectedTweet") as? TweetsDO
+        tweetVM.selectedTweet = intent.extras.getSerializable("selectedTweet") as? TweetsDO
         tweetDetailsBinding.tweetVM = tweetVM
     }
 
