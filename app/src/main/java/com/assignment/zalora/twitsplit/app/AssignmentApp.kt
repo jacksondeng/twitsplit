@@ -6,6 +6,7 @@ import android.os.Bundle
 import com.assignment.zalora.twitsplit.BuildConfig
 import com.assignment.zalora.twitsplit.di.component.DaggerAssignmentAppComponent
 import com.assignment.zalora.twitsplit.util.aws.AWSProvider
+import com.squareup.leakcanary.LeakCanary
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import net.danlew.android.joda.JodaTimeAndroid
@@ -33,8 +34,9 @@ class AssignmentApp : Application(), HasActivityInjector,Application.ActivityLif
         }
         // Init JodaTime
         JodaTimeAndroid.init(this);
-        initDagger();
+        initDagger()
         initAwsProvider()
+        //initLeakcanary()
     }
 
 
@@ -51,6 +53,15 @@ class AssignmentApp : Application(), HasActivityInjector,Application.ActivityLif
         awsProvider.initialize(applicationContext)
     }
 
+    private fun initLeakcanary(){
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return;
+        }
+        LeakCanary.install(this);
+    }
+
     override fun onActivityPaused(activity: Activity?) {
 
     }
@@ -63,6 +74,7 @@ class AssignmentApp : Application(), HasActivityInjector,Application.ActivityLif
     }
 
     override fun onActivityDestroyed(activity: Activity?) {
+        Timber.d("Lifecycle onDestroyed ${activity}")
     }
 
     override fun onActivitySaveInstanceState(activity: Activity?, outState: Bundle?) {
@@ -72,7 +84,7 @@ class AssignmentApp : Application(), HasActivityInjector,Application.ActivityLif
     }
 
     override fun onActivityCreated(activity: Activity?, savedInstanceState: Bundle?) {
-
+        Timber.d("Lifecycle onCreate ${activity}")
     }
 
 

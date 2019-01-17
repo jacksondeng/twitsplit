@@ -20,6 +20,12 @@ buildscript {
         rxbinding_version = '3.0.0-alpha1'
         jodatime_version = '2.10.1'
         recycler_view_version = '28.0.0'
+        aws_version = '2.10.+@aar'
+        dynamodb_version = '2.10.+'
+        app_intro_version = 'v4.2.3'
+        leakcanary_version = '1.6.3'
+        mockito_version = '2.7.6'
+        powermock_version = '2.0.0-beta.5'
     }
 
     repositories {
@@ -40,6 +46,7 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven { url 'https://jitpack.io' }
     }
 }
 

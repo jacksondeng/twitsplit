@@ -9,4 +9,8 @@
     <dimen name="tweet_height">115dp</dimen>
     <dimen name="tweet_button_width">40dp</dimen>
     <dimen name="tweet_button_height">25dp</dimen>
+    <dimen name="img_finger_click_width">35dp</dimen>
+    <dimen name="img_finger_click_height">35dp</dimen>
+    <dimen name="new_tweet_button_width">185dp</dimen>
+    <dimen name="new_tweet_button_height">35dp</dimen>
 </resources>

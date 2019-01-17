@@ -22,4 +22,7 @@ abstract class ActivityBindingModule {
 
     @ContributesAndroidInjector
     internal abstract fun contributeToTweetDetailsActivity(): TweetDetailsActivity
+
+    @ContributesAndroidInjector
+    internal abstract fun contributeToFirstTimeTutorialActivity() : FirstTimeTutorialActivity
 }

@@ -13,4 +13,10 @@
     <string name="network_err">Network error</string>
     <string name="network_err_msg">Please ensure you have internet connection.</string>
     <string name="whats_on_your_mind">What\'s on your mind?</string>
+    <string name="register">Register</string>
+    <string name="wait_for_otp_to_arrive">Wait for OTP to arrive via email or SMS</string>
+    <string name="enter_otp">Enter the OTP to verify your account</string>
+    <string name="click_here_to_tweet">Click here to Tweet</string>
+    <string name="click_here_to_logout">Click here to logout</string>
+    <string name="swipe_left_to_delete_tweet">Swipe left to delete Tweet</string>
 </resources>

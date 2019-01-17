@@ -1,5 +1,6 @@
 package com.assignment.zalora.twitsplit.di.module
 
+import android.app.Activity
 import android.app.Application
 import android.arch.lifecycle.MutableLiveData
 import javax.inject.Singleton
@@ -11,6 +12,7 @@ import com.assignment.zalora.twitsplit.db.DynamoDbUtils
 import com.assignment.zalora.twitsplit.model.TweetsDO
 import com.assignment.zalora.twitsplit.util.aws.AWSProvider
 import com.assignment.zalora.twitsplit.util.network.NetworkManager
+import com.assignment.zalora.twitsplit.view.activity.MainActivity
 import dagger.Module
 
 

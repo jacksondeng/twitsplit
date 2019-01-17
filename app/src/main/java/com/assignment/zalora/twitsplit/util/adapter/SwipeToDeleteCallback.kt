@@ -18,9 +18,9 @@ class SwipeToDeleteCallback(var tweetVM: TweetVM) : ItemTouchHelper.SimpleCallba
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         val position = viewHolder.adapterPosition
-        if(tweetVM.tweetAdapter.tweets!=null) {
-            tweetVM.deleteTweets(tweetVM.tweetAdapter.tweets!!.get(position))
-            tweetVM.tweetAdapter.removeAt(position)
+        if(tweetVM.tweetAdapter?.tweets!=null) {
+            tweetVM.deleteTweets(tweetVM.tweetAdapter?.tweets!!.get(position))
+            tweetVM.tweetAdapter?.removeAt(position)
         }
     }
 

@@ -1,28 +1,31 @@
 package com.assignment.zalora.twitsplit.view.activity
 
 import android.arch.lifecycle.Observer
-import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
-import android.os.Handler
-import android.support.v7.app.AppCompatActivity;
-import com.amazonaws.mobile.client.UserState
 import com.assignment.zalora.twitsplit.R
 import com.assignment.zalora.twitsplit.util.aws.AWSInstanceState
-import com.assignment.zalora.twitsplit.util.aws.AWSProvider
-import dagger.android.AndroidInjection
-
-import kotlinx.android.synthetic.main.activity_splash.*
-import timber.log.Timber
 import javax.inject.Inject
 
 class SplashActivity : BaseActivity() {
+
+    @Inject
+    lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
-        checkForUserState()
-        observeInstanceState()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(shouldShowTutorial()){
+            gotoTutorial()
+        } else {
+            checkForUserState()
+            observeInstanceState()
+        }
     }
 
     private fun observeInstanceState(){
@@ -53,4 +56,8 @@ class SplashActivity : BaseActivity() {
         }
     }
 
+    private fun shouldShowTutorial() : Boolean{
+        return (sharedPreferences.getBoolean("shouldShowTutorial",true
+        ))
+    }
 }

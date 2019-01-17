@@ -24,6 +24,11 @@ class TweetsDO() :Serializable{
     var msg: String? = ""
     var username: String? = ""
 
+
+    fun setPostedDateTime(postedDateTime: String){
+
+    }
+
     fun getPostedDateTime() :String{
         val dt = DateTime(creationDate.toLong())
         return dt.toLocalDateTime().toString().replace("T"," ").replace("\\..*".toRegex(),"")

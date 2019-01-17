@@ -48,9 +48,6 @@ class InputMsgDialogFragment : DialogFragment() {
 
     override fun onDismiss(dialog: DialogInterface?) {
         super.onDismiss(dialog)
-        if(!canceledByUser){
-            passData(msgEt?.text.toString())
-        }
     }
 
     // Pass msg back to activity on fragment dismissal
@@ -76,10 +73,10 @@ class InputMsgDialogFragment : DialogFragment() {
 
     fun initListeners(){
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        btnTweet?.setOnClickListener { this.dismiss()}
-        btnCancel?.setOnClickListener{
-            canceledByUser = true
+        btnTweet?.setOnClickListener {
             this.dismiss()
+            passData(msgEt?.text.toString())
         }
+        btnCancel?.setOnClickListener{ this.dismiss() }
     }
 }

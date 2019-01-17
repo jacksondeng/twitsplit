@@ -1,5 +1,6 @@
 package com.assignment.zalora.twitsplit.adapter
 
+import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -16,11 +17,13 @@ class TweetAdapter @Inject constructor(): RecyclerView.Adapter<TweetAdapter.View
 
     var tweets : MutableList<TweetsDO> ?= null
     var onItemClickedCallback : OnItemClickedCallback ?= null
+    var context : Context ?= null
 
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): TweetAdapter.ViewHolder {
-        onItemClickedCallback = parent.context as OnItemClickedCallback
+        context = parent.context
+        onItemClickedCallback = context as OnItemClickedCallback
 
-        val inflater = LayoutInflater.from(parent.getContext())
+        val inflater = LayoutInflater.from(context)
         val view = inflater.inflate(R.layout.tweet_item, parent, false)
         return ViewHolder(view).listen { pos, type ->
             Timber.d("Tweets selected ${tweets!!.get(pos)}")

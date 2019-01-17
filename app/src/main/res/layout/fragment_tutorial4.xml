@@ -1,0 +1,73 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:id="@+id/layoutContainer"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:background="@android:color/holo_blue_light">
+
+    <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+        <ImageView
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:src="@drawable/tutorial4"
+                app:layout_constraintHeight_percent="0.85"
+                app:layout_constraintWidth_percent="0.65"
+                app:layout_constraintVertical_bias="0.5"
+                app:layout_constraintHorizontal_bias="0.5"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:id="@+id/imgTutorial"/>
+
+
+        <TextView
+                android:text="@string/click_here_to_logout"
+                android:textSize="@dimen/text_size_normal"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                app:layout_constraintVertical_bias="0.747"
+                app:layout_constraintHorizontal_bias="0.853"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+
+        <ImageView
+                android:id="@+id/imgSwipe"
+                app:layout_constraintTop_toTopOf="@id/imgTutorial"
+                app:layout_constraintBottom_toBottomOf="@id/imgTutorial"
+                app:layout_constraintLeft_toLeftOf="@id/imgTutorial"
+                app:layout_constraintRight_toRightOf="@id/imgTutorial"
+                android:src="@drawable/swipe"
+                app:layout_constraintVertical_bias="0.256"
+                android:layout_width="@dimen/img_finger_click_width"
+                android:layout_height="@dimen/img_finger_click_height"/>
+
+
+        <TextView
+                android:text="@string/swipe_left_to_delete_tweet"
+                android:textSize="@dimen/text_size_normal"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                app:layout_constraintVertical_bias="0"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintTop_toBottomOf="@id/imgSwipe"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+
+    </android.support.constraint.ConstraintLayout>
+
+</FrameLayout>

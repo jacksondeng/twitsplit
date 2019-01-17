@@ -31,7 +31,6 @@ class DynamoDbUtils(private var awsProvider: AWSProvider,private var networkMana
             tweet.msg = msg
             tweet.creationDate = getCurrentTimeStamp(index)
             return tweet
-
     }
 
     fun postTweet(msgList : List<String>){
@@ -41,7 +40,7 @@ class DynamoDbUtils(private var awsProvider: AWSProvider,private var networkMana
                 return
             }
 
-            initDbClient()
+            dynamoDBMapper = initDbClient()
 
             loadingState.postValue(LoadingState.Posting)
             for (index in msgList.indices) {
@@ -60,7 +59,7 @@ class DynamoDbUtils(private var awsProvider: AWSProvider,private var networkMana
 
     fun deleteTweet(tweetsDO: TweetsDO){
         if(isConnectedToNetwork() && checkCachedUserId()) {
-            initDbClient()
+            dynamoDBMapper = initDbClient()
             loadingState.postValue(LoadingState.Deleting)
             thread(start = true) {
                 dynamoDBMapper?.delete(tweetsDO)
@@ -75,7 +74,7 @@ class DynamoDbUtils(private var awsProvider: AWSProvider,private var networkMana
 
     fun loadTweets(){
         if(isConnectedToNetwork() && checkCachedUserId()) {
-            initDbClient()
+            dynamoDBMapper = initDbClient()
             var paginatedQueryList: PaginatedQueryList<TweetsDO>? = null
             thread(start = true) {
                 paginatedQueryList = dynamoDBMapper?.query(TweetsDO::class.java, createQueryExpression(10))
@@ -104,15 +103,16 @@ class DynamoDbUtils(private var awsProvider: AWSProvider,private var networkMana
         return queryExpression
     }
 
-    fun initDbClient(){
-        if(awsProvider.isUserSignedIn.value!! && dynamoDBMapper == null) {
 
+    fun initDbClient() : DynamoDBMapper{
+        if(awsProvider.isUserSignedIn.value!! && dynamoDBMapper == null) {
             val client = AmazonDynamoDBClient(awsProvider.awsCredentials)
-            dynamoDBMapper = DynamoDBMapper.builder()
+            return DynamoDBMapper.builder()
                 .dynamoDBClient(client)
                 .awsConfiguration(AWSMobileClient.getInstance().configuration)
                 .build()
         }
+        return dynamoDBMapper!!
     }
 
     fun getCurrentTimeStamp(prefix : Int) : String{

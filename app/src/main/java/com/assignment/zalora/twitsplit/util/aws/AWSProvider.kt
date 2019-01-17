@@ -23,10 +23,6 @@ class AWSProvider(var context: Context){
     var username : String ?= null
     var isUserSignedIn : MutableLiveData<Boolean> = MutableLiveData()
 
-    init {
-        instanceState.postValue(AWSInstanceState.NotInitialized)
-    }
-
     @Synchronized
     fun initialize(context: Context) {
         if (instance == null) {
@@ -61,9 +57,8 @@ class AWSProvider(var context: Context){
             Timber.d("UserSignedIn State ${details.userState}")
             when(details.userState){
                 UserState.SIGNED_IN ->{
-                    awsCredentials = instance!!.awsCredentials
-                    isUserSignedIn.postValue(true)
                     retrieveUserInfo()
+                    isUserSignedIn.postValue(true)
                     instanceState.postValue(AWSInstanceState.Initialized)
                 }
 
@@ -94,6 +89,4 @@ class AWSProvider(var context: Context){
         clearCredentials()
         instance!!.signOut()
     }
-
-
 }

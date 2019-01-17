@@ -19,7 +19,6 @@ import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_base.*
 import timber.log.Timber
 import javax.inject.Inject
-import com.assignment.zalora.twitsplit.util.aws.AWSProvider
 
 
 open class BaseActivity : DaggerAppCompatActivity(), StatusUtils {
@@ -128,6 +127,11 @@ open class BaseActivity : DaggerAppCompatActivity(), StatusUtils {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
+    }
+
+    fun gotoTutorial(){
+        val intent = Intent(this, FirstTimeTutorialActivity::class.java)
+        startActivity(intent)
     }
 
 }

@@ -2,6 +2,7 @@ package com.assignment.zalora.twitsplit.view.activity
 
 import android.app.Activity
 import android.arch.lifecycle.Observer
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import com.amazonaws.mobile.client.*
@@ -22,7 +23,6 @@ class AuthActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
         promptLogin(this@AuthActivity)
-        finish()
     }
 
 
@@ -30,20 +30,35 @@ class AuthActivity : BaseActivity() {
         awsProvider.instance!!.showSignIn(
             activity,
             SignInUIOptions.builder()
-                .nextActivity(MainActivity::class.java)
                 .logo(R.drawable.logo)
                 .backgroundColor(Color.WHITE)
                 .canCancel(false)
                 .build(),
             object : Callback<UserStateDetails> {
                 override fun onResult(userStateDetails: UserStateDetails) {
-
+                    Timber.d("UserStateDetails $userStateDetails")
                 }
 
                 override fun onError(e: Exception) {
+                    Timber.d("UserStateDetails $e")
                 }
             }
         )
+
+        tweetVM.isUserSignedIn.observe(this, Observer {
+            when(it){
+                true -> {
+                    gotoMain()
+                    finish()
+                }
+            }
+        })
+    }
+
+
+
+    override fun onDestroy() {
+        super.onDestroy()
     }
 
 }

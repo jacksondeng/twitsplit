@@ -29,16 +29,16 @@
                 app:layout_constraintHorizontal_bias="0.95"
                 app:layout_constraintVertical_bias="0.95"/>
 
+
         <android.support.constraint.ConstraintLayout
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintVertical_bias="0.025"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                app:layout_constraintWidth_percent="0.7"
-                app:layout_constraintHeight_percent="0.06"
+                app:layout_constraintVertical_bias="0.015"
+                app:layout_constraintHorizontal_bias="0.5"
+                android:layout_width="@dimen/new_tweet_button_width"
+                android:layout_height="@dimen/new_tweet_button_height"
                 android:background="@drawable/rounded_corner_background"
                 android:id="@+id/postCl">
 

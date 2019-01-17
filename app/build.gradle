@@ -52,9 +52,22 @@ dependencies {
     implementation "com.android.support.constraint:constraint-layout:$constraint_layout_version"
     implementation "com.android.support.constraint:constraint-layout:$constraint_layout_version"
     implementation "com.android.support:cardview-v7:$android_sdk_version"
+    implementation "com.android.support:support-v4:$android_sdk_version"
     testImplementation "junit:junit:$junit_version"
     androidTestImplementation "com.android.support.test:runner:$test_runner_version"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$espresso_version"
+
+    // Mockito
+    testImplementation "org.mockito:mockito-core:$mockito_version"
+
+    // PowerMock for Log class
+    testImplementation "org.powermock:powermock-module-junit4-rule:$powermock_version"
+    testImplementation "org.powermock:powermock-core:$powermock_version"
+    testImplementation "org.powermock:powermock-module-junit4:$powermock_version"
+    testImplementation "org.powermock:powermock-api-mockito2:$powermock_version"
+
+    // Test helpers for LiveData
+    testImplementation "android.arch.core:core-testing:$arch_components_version"
 
     // Dagger 2
     implementation "com.google.dagger:dagger:$dagger_version"
@@ -94,10 +107,20 @@ dependencies {
     implementation "com.android.support:recyclerview-v7:$recycler_view_version"
 
     // Cognito
-    implementation('com.amazonaws:aws-android-sdk-mobile-client:2.10.+@aar') { transitive = true }
-    implementation('com.amazonaws:aws-android-sdk-auth-userpools:2.10.+@aar') { transitive = true }
-    implementation('com.amazonaws:aws-android-sdk-auth-ui:2.10.+@aar') { transitive = true }
+    implementation("com.amazonaws:aws-android-sdk-mobile-client:$aws_version") { transitive = true }
+    implementation("com.amazonaws:aws-android-sdk-auth-userpools:$aws_version") { transitive = true }
+    implementation("com.amazonaws:aws-android-sdk-auth-ui:$aws_version") { transitive = true }
 
     // Dynamodb
-    implementation 'com.amazonaws:aws-android-sdk-ddb-mapper:2.10.+'
+    implementation("com.amazonaws:aws-android-sdk-ddb-mapper:$dynamodb_version") { transitive = true }
+
+    // First time tutorial
+    implementation "com.github.apl-devs:appintro:$app_intro_version"
+
+    // Leakcanary
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakcanary_version"
+    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakcanary_version"
+    // Optional, if you use support library fragments:
+    debugImplementation "com.squareup.leakcanary:leakcanary-support-fragment:$leakcanary_version"
+
 }

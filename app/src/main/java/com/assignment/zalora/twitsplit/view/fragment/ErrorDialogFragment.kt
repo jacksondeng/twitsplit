@@ -56,7 +56,6 @@ class ErrorDialogFragment : DialogFragment() {
 
     fun initViews(view : View){
         errorMsgTv = view.findViewById(R.id.err_msg_tv)
-        Timber.d("Error MSG $errorMsg")
         errorMsgTv?.setText(errorMsg)
         btnDismiss = view.findViewById(R.id.btn_dismiss)
     }
