@@ -14,20 +14,11 @@ class TweetDetailsActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initBindings()
-        initListeners()
-    }
-
-    override fun onResume() {
-        super.onResume()
     }
 
     private fun initBindings(){
         tweetDetailsBinding = DataBindingUtil.setContentView(this, R.layout.activity_tweet_details);
         tweetVM.selectedTweet = intent.extras.getSerializable("selectedTweet") as? TweetsDO
         tweetDetailsBinding.tweetVM = tweetVM
-    }
-
-    private fun initListeners(){
-
     }
 }

@@ -91,7 +91,7 @@ class DynamoDbUtils(private var awsProvider: AWSProvider,private var networkMana
         }
     }
 
-    fun createQueryExpression(limit : Int) : DynamoDBQueryExpression<TweetsDO>{
+    private fun createQueryExpression(limit : Int) : DynamoDBQueryExpression<TweetsDO>{
         val queryExpression = DynamoDBQueryExpression<TweetsDO>()
         if(isConnectedToNetwork() && checkCachedUserId()) {
             val tweet = TweetsDO()
@@ -115,12 +115,12 @@ class DynamoDbUtils(private var awsProvider: AWSProvider,private var networkMana
         return dynamoDBMapper!!
     }
 
-    fun getCurrentTimeStamp(prefix : Int) : String{
+    private fun getCurrentTimeStamp(prefix : Int) : String{
         return (System.currentTimeMillis()+prefix).toString()
     }
 
     // Need to convert to MutableList for deleting tweet because paginatedQueryList cannot be modified
-    fun convertPaginatedListToList(paginatedQueryList: PaginatedQueryList<TweetsDO>?) : MutableList<TweetsDO>{
+    private fun convertPaginatedListToList(paginatedQueryList: PaginatedQueryList<TweetsDO>?) : MutableList<TweetsDO>{
         var list = ArrayList<TweetsDO>()
         thread(start = true) {
             if (paginatedQueryList != null) {
@@ -133,11 +133,11 @@ class DynamoDbUtils(private var awsProvider: AWSProvider,private var networkMana
         return list
     }
 
-    fun isConnectedToNetwork() : Boolean{
+    private fun isConnectedToNetwork() : Boolean{
         return networkManager.isOnline()
     }
 
-    fun checkCachedUserId() : Boolean{
+    private fun checkCachedUserId() : Boolean{
         return awsProvider.cachedUserID != null
     }
 

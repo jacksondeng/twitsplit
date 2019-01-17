@@ -24,20 +24,11 @@ class SplashActivity : BaseActivity() {
             gotoTutorial()
         } else {
             checkForUserState()
-            observeInstanceState()
+            observeUserState()
         }
     }
 
-    private fun observeInstanceState(){
-        tweetVM.awsProvider.instanceState.observe(this, Observer {
-                instanceState ->
-            when(instanceState){
-                AWSInstanceState.Initialized ->{
-
-                }
-            }
-        })
-
+    private fun observeUserState(){
         tweetVM.isUserSignedIn.observe(this, Observer {
             when(it){
                 true -> gotoMain()
@@ -46,7 +37,7 @@ class SplashActivity : BaseActivity() {
         })
     }
 
-    // Checking for case where user start app from recent apps , Application class oncreate doens't get called
+    // Checking for case where user start app from recent apps , Application class oncreate doesn't get called
     private fun checkForUserState(){
         if(tweetVM.awsProvider.instance != null && tweetVM.awsProvider.instanceState.value == AWSInstanceState.Initialized){
             when(tweetVM.isUserSignedIn.value){

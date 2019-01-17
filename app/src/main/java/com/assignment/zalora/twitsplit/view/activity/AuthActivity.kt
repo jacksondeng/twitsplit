@@ -34,6 +34,8 @@ class AuthActivity : BaseActivity() {
                 .backgroundColor(Color.WHITE)
                 .canCancel(false)
                 .build(),
+            // This callback's onResult doesn't get triggered, but still need it otherwise showSignIn method will have issues
+            // After Sign in success the userStateListener will get triggered and update isUserSignedIn livedata
             object : Callback<UserStateDetails> {
                 override fun onResult(userStateDetails: UserStateDetails) {
                     Timber.d("UserStateDetails $userStateDetails")
@@ -53,12 +55,6 @@ class AuthActivity : BaseActivity() {
                 }
             }
         })
-    }
-
-
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 
 }

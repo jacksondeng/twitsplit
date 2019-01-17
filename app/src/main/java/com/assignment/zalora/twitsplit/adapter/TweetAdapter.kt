@@ -16,6 +16,7 @@ import javax.inject.Inject
 class TweetAdapter @Inject constructor(): RecyclerView.Adapter<TweetAdapter.ViewHolder>(){
 
     var tweets : MutableList<TweetsDO> ?= null
+    // Interface on to call method in parent activity
     var onItemClickedCallback : OnItemClickedCallback ?= null
     var context : Context ?= null
 

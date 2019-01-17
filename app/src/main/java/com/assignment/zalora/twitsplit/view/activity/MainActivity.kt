@@ -104,12 +104,5 @@ class MainActivity : BaseActivity(), OnDataPass,OnItemClickedCallback {
         startActivity(intent)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        tweetVM.isUserSignedIn.removeObservers(this)
-        tweetVM.tweetList.removeObservers(this)
-        tweetVM.tweetAdapter?.context = null
-    }
-
 }
 

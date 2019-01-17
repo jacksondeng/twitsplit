@@ -106,17 +106,6 @@ open class BaseActivity : DaggerAppCompatActivity(), StatusUtils {
         errorDialog.show(fm, "fragment_dialog_error");
     }
 
-    fun checkIfUserSignedIn() : Boolean{
-        Timber.d("UserSignedIn ${tweetVM.isUserSignedIn.value} ${tweetVM.userName}")
-        return (tweetVM.isUserSignedIn.value != null && tweetVM.isUserSignedIn.value!!)
-    }
-
-    fun gotoSplash(){
-        val intent = Intent(this, SplashActivity::class.java)
-        startActivity(intent)
-        finish()
-    }
-
     fun gotoAuth(){
         val intent = Intent(this, AuthActivity::class.java)
         startActivity(intent)
@@ -132,6 +121,12 @@ open class BaseActivity : DaggerAppCompatActivity(), StatusUtils {
     fun gotoTutorial(){
         val intent = Intent(this, FirstTimeTutorialActivity::class.java)
         startActivity(intent)
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        tweetVM.tweetAdapter = null
     }
 
 }
